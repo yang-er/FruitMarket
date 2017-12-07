@@ -8,6 +8,7 @@ struct user *LoadUserFromFile()
 {
 	// 表示我在扫描
 	printf("scanning....\n");
+	printf("呵,男人.\n");
 	return NULL;
 }
 
