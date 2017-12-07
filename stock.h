@@ -3,5 +3,5 @@
 
 bool LoadStockFromFile(struct stock warehouse[5]);
 bool SaveStockToFile(struct stock warehouse[5]);
-void OutputStock();
-bool AddStock(int count);
+void OutputStock(struct stock warehouse[5]);
+bool AddStock(struct stock fruit, int count);
