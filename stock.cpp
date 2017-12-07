@@ -49,7 +49,7 @@ bool SaveStockToFile()
 	for (int i = 0; i < 5; i++)
 	{
 		pStock = warehouse + i;
-		fprintf(pFile, "%s %s %c %d %d %d %d %d",
+		fprintf(pFile, "%s %s %c %d %d %d %d %d\n",
 			pStock->fruitName, pStock->tagName, pStock->isSingled ? 'T' : 'F',
 			pStock->left, pStock->sold, pStock->singlePrice,
 			pStock->todayUsage, pStock->boxCount);

@@ -164,6 +164,9 @@
     <ClCompile Include="ticket.cpp" />
     <ClCompile Include="user.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="stock.dat" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
