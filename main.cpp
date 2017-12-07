@@ -14,6 +14,7 @@ int main()
 	cur = localtime(&p);
 	printf("The current date/time is: %s", asctime(cur));
 	LoadStockFromFile();
+	printf("∫«£¨∂≈Œ¨øµ°£\n");
 	LoadUserFromFile();
 	_stock_test();
 #ifdef DEBUG
