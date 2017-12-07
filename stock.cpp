@@ -1,9 +1,12 @@
 #include "stdafx.h"
 #include "structs.h"
+#include "scan.h"
+#include "math.h"
 
 const char* pfStock = "stock.dat";
+extern struct stock warehouse[5];
 
-bool LoadStockFromFile(struct stock warehouse[5])
+bool LoadStockFromFile()
 {
 	FILE *pFile;
 	if (!file_exists(pfStock))
@@ -37,7 +40,7 @@ bool LoadStockFromFile(struct stock warehouse[5])
 	return true;
 }
 
-bool SaveStockToFile(struct stock warehouse[5])
+bool SaveStockToFile()
 {
 	FILE *pFile;
 	pFile = fopen(pfStock, "w");
@@ -55,7 +58,7 @@ bool SaveStockToFile(struct stock warehouse[5])
 	return true;
 }
 
-void OutputStock(struct stock warehouse[5])
+void OutputStock()
 {
 	printf("==================\n");
 	printf("|    库存管理\n");
@@ -83,8 +86,59 @@ void OutputStock(struct stock warehouse[5])
 	}
 }
 
-bool AddStock(struct stock fruit, int count)
+bool AddStock()
 {
-	return false;
+	printf("目前的水果有：");
+	for (int i = 0; i < 5; i++)
+		printf("%d.%s ", i, warehouse[i].fruitName);
+	printf("\n");
+	char op;
+	ScanOption("请输入要增加的水果种类：", '0', '5', &op);
+	int id = op - '0';
+	printf("当前水果的单位为：%s。\n", warehouse[id].tagName);
+	if (warehouse[id].isSingled)
+	{
+		int count;
+		ScanInt("请输入要增加的数量：", &count);
+		warehouse[id].left += count;
+	}
+	else
+	{
+		double count;
+		ScanDouble("请输入要增加的数量：", &count);
+		warehouse[id].left += ceil(count * 20);
+	}
+	return true;
 }
 
+void _stock_test()
+{
+	char op;
+	while (1)
+	{
+		printf("1.保存 2.加载 3.查库房 4.进货 5.退出\n");
+		ScanOption("请选择进入：", '1', '5', &op);
+		switch (op)
+		{
+		case '1':
+			SaveStockToFile();
+			break;
+		case '2':
+			LoadStockFromFile();
+			break;
+		case '3':
+			OutputStock();
+			break;
+		case '4':
+			AddStock();
+			break;
+		case '5':
+			if (ScanBoolean("确定退出嘛(y/n)："))
+				op = -52;
+		default:
+			break;
+		}
+		if (op == -52)
+			break;
+	}
+}

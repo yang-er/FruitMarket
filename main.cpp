@@ -5,7 +5,7 @@
 #include "scan.h"
 
 struct stock warehouse[5];
-
+extern void _stock_test();
 int main()
 {
 	time_t p;
@@ -13,8 +13,8 @@ int main()
 	time(&p);
 	cur = localtime(&p);
 	printf("The current date/time is: %s", asctime(cur));
-	LoadStockFromFile(warehouse);
-	OutputStock(warehouse);
+	LoadStockFromFile();
+	_stock_test();
 #ifdef DEBUG
 	system("pause");
 #endif

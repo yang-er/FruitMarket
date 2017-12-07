@@ -54,6 +54,26 @@ void ScanInt(const char* message, int *i)
 }
 
 /// <summary>
+/// 扫描双精度浮点。
+/// </summary>
+void ScanDouble(const char* message, double *i)
+{
+	printf(message);
+#ifdef _CRT_SECURE_NO_WARNINGS
+	scanf_result = scanf("%lf", i);
+#else
+	scanf_result = scanf_s("%lf", i);
+#endif
+	FlushStream();
+	if (scanf_result != 1)
+	{
+		printf("输入格式有误！无法识别为浮点。\n");
+		FlushStream();
+		ScanDouble(message, i);
+	}
+}
+
+/// <summary>
 /// 扫描len为长度的字符串进入buffer。
 /// </summary>
 void ScanText(const char* message, char *buffer, int len)

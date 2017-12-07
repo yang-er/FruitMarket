@@ -12,11 +12,7 @@
 #include <io.h>
 
 #define gets gets_s
-#ifdef WIN32
 #define file_exists(p) (_access(p, 0) != EOF)
-#else
-#define file_exists(p) (access(p, 0) != EOF)
-#endif
 
 void CheckFile(FILE* pFile, const char* pszName);
 void DataNotFulfilled(FILE* pFile, const char* pszName);
