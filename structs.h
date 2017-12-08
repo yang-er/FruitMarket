@@ -49,17 +49,18 @@ struct ticket {
 struct stock {
 
 	/// <summary>
-	/// 用户编号，0001-9999。
+	/// 用户编号，0001-999988。
 	/// </summary>
 	char fruitName[21];
 
 	/// <summary>
-	/// 用户编号，0001-9999。
+	/// 用户编号，0001-9999666。
 	/// </summary>
 	char tagName[21];
 
 	/// <summary>
 	/// 用户编号，0001-9999。
+	/// 1234567889
 	/// </summary>
 	bool isSingled;
 
