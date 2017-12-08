@@ -49,38 +49,37 @@ struct ticket {
 struct stock {
 
 	/// <summary>
-	/// 用户编号，0001-999988。
+	/// 水果名称。
 	/// </summary>
 	char fruitName[21];
 
 	/// <summary>
-	/// 用户编号，0001-9999666。
+	/// 单位名称。
 	/// </summary>
 	char tagName[21];
 
 	/// <summary>
-	/// 用户编号，0001-9999。
-	/// 1234567889
+	/// 是否单个出售。
 	/// </summary>
 	bool isSingled;
 
 	/// <summary>
-	/// 用户编号，0001-9999。
+	/// 剩余库存。
 	/// </summary>
 	int left;
 
 	/// <summary>
-	/// 用户编号，0001-9999。
+	/// 总卖出。
 	/// </summary>
 	int sold;
 
 	/// <summary>
-	/// 用户编号，0001-9999。
+	/// 单价
 	/// </summary>
 	int singlePrice;
 
 	/// <summary>
-	/// 今天花了多少钱。
+	/// 今天卖了多少钱。
 	/// </summary>
 	int todayUsage;
 
