@@ -41,6 +41,11 @@ struct ticket {
 	/// </summary>
 	int left;
 
+	/// <summary>
+	/// 链表。
+	/// </summary>
+	struct ticket *next;
+
 };
 
 /// <summary>
@@ -74,7 +79,7 @@ struct stock {
 	int sold;
 
 	/// <summary>
-	/// 单价
+	/// 单价。
 	/// </summary>
 	int singlePrice;
 
@@ -84,7 +89,7 @@ struct stock {
 	int todayUsage;
 
 	/// <summary>
-	/// 用户编号，0001-9999。
+	/// 一盒多少个。
 	/// </summary>
 	int boxCount;
 
