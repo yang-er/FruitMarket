@@ -19,12 +19,12 @@ struct ticket {
 	/// <summary>
 	/// 水果种类。
 	/// </summary>
-	int fid;
+	int fid[5];
 
 	/// <summary>
 	/// 水果种类。
 	/// </summary>
-	int amount;
+	int amount[5];
 
 	/// <summary>
 	/// 会员卡号，-1为现金。
