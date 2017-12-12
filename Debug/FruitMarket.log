@@ -1,0 +1,9 @@
+﻿  stdafx.cpp
+  user.cpp
+  ticket.cpp
+  stock.cpp
+c:\users\59226\source\repos\fruitmarket\stock.cpp(109): warning C4244: “+=”: 从“double”转换到“int”，可能丢失数据
+  scan.cpp
+  main.cpp
+  正在生成代码...
+  FruitMarket.vcxproj -> C:\Users\59226\source\repos\FruitMarket\Debug\FruitMarket.exe
