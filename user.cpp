@@ -163,7 +163,7 @@ void ListAllVips()
 
 void _user_test()
 {
-	ClearScreen();
+	_clear();
 	char op;
 	while (1)
 	{

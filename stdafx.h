@@ -12,11 +12,22 @@
 #include <io.h>
 
 #define gets gets_s
+
+// 文件p是否存在
 #define file_exists(p) (_access(p, 0) != EOF)
+
 #ifdef WINVER
-#define ClearScreen() system("cls")
+#include <Windows.h>
+// 清屏幕
+#define _clear() system("cls")
+// 暂停a毫秒
+#define _sleep(a) Sleep(a)
 #else
-#define ClearScreen() system("clear")
+#include <unistd.h>
+// 清屏幕
+#define _clear() system("clear")
+// 暂停a毫秒
+#define _sleep(a) usleep(a*1000)
 #endif
 
 /// <summary>检查文件是否打开成功</summary>
