@@ -12,5 +12,5 @@ bool SaveStockToFile();
 /// <summary>输出所有水果的库存</summary>
 void OutputStock();
 
-/// <summary>增加某一水果的库存</summary>
-bool AddStock();
+/// <summary>进入仓库模式</summary>
+void _stock();
