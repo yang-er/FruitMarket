@@ -3,8 +3,9 @@
 #include "math.h"
 #include "user.h"
 
-struct user *pUserFront = NULL;
-struct user *pUserRear = NULL;
+struct user _defalut_user = { "现金", -1, 0, 0, NULL };
+struct user *pUserFront = &_defalut_user;
+struct user *pUserRear = &_defalut_user;
 struct user *pUserTemp = NULL;
 const char *pfUser = "user.dat";
 
@@ -31,29 +32,26 @@ bool ChargeToCard(short uid, int credit, bool isAdd)
 
 void CreateCard()
 {
-	struct user *head = NULL;
-	struct user *p1, *p2 = NULL;
-	int i = 1, j = 1;
-	while (j != 0)
-	{
-		p1 = (struct user *)malloc(sizeof(struct user));
-		ScanText("请输入持卡人签名:", p1->name, 21);
-		ScanShort("请输入编号:", &p1->uid);
-		ScanInt("请输入会员卡余额:", &p1->balance);
-		ScanInt("请输入当日开销:", &p1->todayUsage);
-		if (i == 1)
-			head = p1;
-		else
-			p2->next = p1;
-		p2 = p1;
-		i++;
-			ScanInt("请输入是否继续保存:1.是,0.否", &j);
-	}
-	p2->next = NULL;
+	do {
+		pUserTemp = (struct user *)malloc(sizeof(struct user));
+		memset(pUserTemp, 0x00, sizeof(struct user));
+		ScanText("请输入持卡人签名:", pUserTemp->name, 21);
+		ScanShort("请输入编号:", &pUserTemp->uid);
+		double money;
+		ScanDouble("请输入会员卡余额:", &money);
+		pUserTemp->balance = (int)floor(money * 100 + 0.5);
+		pUserRear->next = pUserTemp;
+		pUserRear = pUserRear->next;
+		pUserTemp = NULL;
+	} while (ScanBoolean("是否继续输入？(y/n)："));
 }
 
 bool CrashCard()
 {
+	short i;
+	ScanShort("请输入会员卡号", &i);
+	while (pUserFront != NULL && pUserFront->uid == i)
+
 	return false;
 }
 
@@ -64,15 +62,15 @@ bool ListVip(struct user* current)
 	printf("==================\n");
 	printf("\n");
 	printf("会员姓名:%s\n", current->name);
-	printf("会员卡号:%d\n", current->uid);
-	printf("用户余额:%d\n", current->balance);
+	printf("会员卡号:%04hd\n", current->uid);
+	printf("用户余额:%d.%02d\n", current->balance / 100, current->balance % 100);
 	printf("今日开销:%d\n", current->todayUsage);
 	return false;
 }
 
 void ListAllVips()
 {
-	pUserTemp = pUserFront;
+	pUserTemp = pUserFront->next;
 	while (pUserTemp != NULL)
 	{
 		ListVip(pUserTemp);
@@ -80,30 +78,9 @@ void ListAllVips()
 	}
 }
 
-void printvip(struct user* vipHead) {
-	struct user *p1=NULL;
-	short i;
-	bool flag = false;
-	ScanShort("请输入会员卡号", &i);
-	 do{
-		 p1 = vipHead;
-		vipHead = vipHead->next;
-	 } while (vipHead != NULL && p1->uid != i);
-	if (p1->uid == i)
-		flag = true;
-	if (!flag)
-		printf("没有找到\n");
-	else
-		ListVip(p1);
-}
-void inputuid()
-{
-	short i;
-	ScanShort("请输入会员卡号:", &i);
-	CrashCard();
-}
 void _user_test()
 {
+	ClearScreen();
 	char op;
 	while (1)
 	{
@@ -118,13 +95,23 @@ void _user_test()
 		LoadUserFromFile();
 		break;
 	case '3':
-		printvip(NULL);
+		short i;
+		ScanShort("请输入会员卡号:", &i);
+		do {
+			pUserTemp = pUserFront;
+			pUserTemp = pUserTemp->next;
+		} while (pUserTemp != NULL && pUserTemp->uid != i);
+		if (pUserTemp == NULL)
+			printf("没有找到\n");
+		else
+			ListVip(pUserTemp);
+		pUserTemp = NULL;
 		break;
 	case '4':
 		ListAllVips();
 		break;
 	case '5':
-		inputuid();
+		CrashCard();
 		break;
 	case '6':
 		if (ScanBoolean("确定退出嘛(y/n)："))
