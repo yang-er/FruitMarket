@@ -3,27 +3,70 @@
 #include "math.h"
 #include "user.h"
 #include "structs.h"
+#include <sys/stat.h>
 
-struct user _defalut_user = { "现金", -1, 0, 0, NULL };
-struct user *pUserFront = &_defalut_user;
-struct user *pUserRear = &_defalut_user;
+struct user *pUserFront = NULL;
+struct user *pUserRear = NULL;
 struct user *pUserTemp = NULL;
 const char *pfUser = "user.dat";
 
-
 void LoadUserFromFile()
 {
-	
-	return;
+	struct stat pStat;
+	stat(pfUser, &pStat);
+
+	// 文件不存在的时候初始化为空数组
+	if (stat(pfUser, &pStat) == -1)
+	{
+		pUserTemp = (struct user*) malloc(sizeof(struct user));
+		memset(pUserTemp, 0x00, sizeof(struct user));
+		strcpy(pUserTemp->name, "现金");
+		pUserTemp->uid = -1;
+		pUserFront = pUserTemp;
+		pUserRear = pUserTemp;
+		pUserTemp = NULL;
+		return;
+	}
+
+	// 检测文件完整度
+	if (pStat.st_size % sizeof(struct user) != 0)
+		DataNotFulfilled(NULL, pfUser);
+
+	// 打开文件
+	FILE *pFile = fopen(pfUser, "r");
+	CheckFile(pFile, pfUser);
+	for (int i = 0; i < pStat.st_size / sizeof(struct user); i++)
+	{
+		pUserTemp = (struct user*) malloc(sizeof(struct user));
+		memset(pUserTemp, 0x00, sizeof(struct user));
+		fread(pUserTemp, sizeof(struct user), 1, pFile);
+		if (*((char*)pUserTemp) == -1)
+			printf("gg");
+		if (pUserFront == NULL) pUserFront = pUserTemp;
+		if (pUserRear != NULL) pUserRear->next = pUserTemp;
+		pUserRear = pUserTemp;
+		pUserTemp = NULL;
+	}
+	fclose(pFile);
+
 }
 
 bool SaveUserToFile()
 {
-	FILE *pFile;
-	pFile = fopen(pfUser, "w+");
+	FILE *pFile = fopen(pfUser, "w+");
 	CheckFile(pFile, pfUser);
-	
-	return false;
+	while (pUserFront != NULL)
+	{
+		pUserTemp = pUserFront;
+		pUserFront = pUserFront->next;
+		pUserTemp->next = NULL;
+		fwrite(pUserTemp, sizeof(struct user), 1, pFile);
+		free(pUserTemp);
+	}
+	pUserRear = NULL;
+	pUserTemp = NULL;
+	fclose(pFile);
+	return true;
 }
 
 bool ChargeToCard(short uid, int credit, bool isAdd)
