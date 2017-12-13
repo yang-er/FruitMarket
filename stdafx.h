@@ -30,6 +30,9 @@
 #define _sleep(a) usleep(a*1000)
 #endif
 
+// 交换数值类型a和b的值
+#define swap(a,b) a^=b^=a^=b;
+
 /// <summary>检查文件是否打开成功</summary>
 /// <param name="pFile" type="File">要检查的文件指针</param>
 /// <param name="pszName" type="String">文件名</param>

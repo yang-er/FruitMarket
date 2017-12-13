@@ -17,6 +17,10 @@ void CreateCard();
 /// <summary>销毁会员卡</summary>
 bool CrashCard();
 
+/// <summary>按卡号找卡记录</summary>
+/// <param name="uid" type="Short">用户编号</param>
+struct user *GetCardById(short uid);
+
 /// <summary>向卡内充值</summary>
 /// <param name="uid" type="Short">用户编号</param>
 /// <param name="credit" type="Integer">钱的数目</param>
