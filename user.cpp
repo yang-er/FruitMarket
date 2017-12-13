@@ -198,13 +198,18 @@ void ListAllVips()
 	}
 }
 
-bool ChangeVip(short vid){
+bool ChangeVip(short vid) {
 	int i;
-		printf("请输入要修改的内容:0.修改会员姓名,1.修改会员当日消费金额:");
-		ScanInt("%d", &i);
-		if(i==0)
-
-	
+	ScanInt("请输入要修改的内容:0.修改会员姓名,1.修改会员当日消费金额:", &i);
+	if (i == 0) {
+		ScanText("请输入新的会员姓名:", pUserTemp->name, 21);
+	}
+	else if (i == 1)
+	{
+		ScanInt("请输入当日消费金额:", &pUserTemp->todayUsage);
+	}
+	return false;
+}
 
 void _user_test()
 {
@@ -227,7 +232,7 @@ void _user_test()
 	printf("|    9.退出\n");
 	printf("|\n");
 	printf("==================\n");
-	ScanOption("请选择进入：", '1', '6', &op);
+	ScanOption("请选择进入：", '1', '9', &op);
 	printf("\n");
 	switch (op)
 	{
@@ -290,9 +295,19 @@ void _user_test()
 		}
 		break;
 		case '8':
-			short i;
-			ScanShort("请输入会员卡号:", &i);
-			ChangeVip(i);
+			short i1;
+			ScanShort("请输入会员卡号:", &i1);
+			pUserTemp = pUserFront;
+			while (pUserTemp->next != NULL && pUserTemp->next->uid != i1)
+				pUserTemp = pUserTemp->next;
+			if (pUserTemp->next == NULL)
+			{
+				printf("用户%04hd不存在！\n", i1);
+			
+			}
+			else
+			ChangeVip(i1);
+			//pUserTemp = NULL;
 			break;
 	default:
 		break;
