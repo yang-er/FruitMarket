@@ -161,14 +161,37 @@ void ListAllVips()
 	}
 }
 
+bool ChangeVip(short vid){
+	int i;
+		printf("请输入要修改的内容:0.修改会员姓名,1.修改会员当日消费金额:");
+		ScanInt("%d", &i);
+		if(i==0)
+
+	
+
 void _user_test()
 {
 	_clear();
 	char op;
 	while (1)
 	{
-	printf("1.创建单个会员 2.保存会员信息 3.加载会员信息 4.打印单个会员 5.打印全部会员 6.删除单个会员  7.充值或消费 8.退出\n");
-	ScanOption("请选择进入：", '1', '8', &op);
+	printf("==================\n");
+	printf("|    用户\n");
+	printf("==================\n");
+	printf("|\n");
+	printf("|    1.创建单个会员\n");
+	printf("|    2.保存会员信息\n");
+	printf("|    3.加载会员信息\n");
+	printf("|    4.打印单个会员\n");
+	printf("|    5.打印全部会员\n");
+	printf("|    6.删除单个会员\n");
+	printf("|    7.充值或消费\n");
+	printf("|    8.修改会员信息\n");
+	printf("|    9.退出\n");
+	printf("|\n");
+	printf("==================\n");
+	ScanOption("请选择进入：", '1', '6', &op);
+	printf("\n");
 	switch (op)
 	{
 	case '1':
@@ -199,7 +222,7 @@ void _user_test()
 	case '6':
 		CrashCard();
 		break;
-	case '8':
+	case '9':
 		if (ScanBoolean("确定退出嘛(y/n)："))
 			op = -52;
 		break;
@@ -229,6 +252,11 @@ void _user_test()
 			ChargeToCard(j, n, isadd);
 		}
 		break;
+		case '8':
+			short i;
+			ScanShort("请输入会员卡号:", &i);
+			ChangeVip(i);
+			break;
 	default:
 		break;
 }

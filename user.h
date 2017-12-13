@@ -29,3 +29,6 @@ bool ListVip(struct user *current);
 
 /// <summary>列出所有的用户</summary>
 void ListAllVips();
+ ///<summary>修改用户信息</summary>
+///<param name="uid" type="Short">用户编号</param>
+bool ChangeVip(short vid);
