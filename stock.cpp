@@ -183,28 +183,14 @@ void _stock()
 		printf("|\n");
 		printf("|    1.查库房\n");
 		printf("|    2.进货\n");
-		printf("|    3.加载\n");
-		printf("|    4.保存\n");
-		printf("|    5.修改\n");
-		printf("|    6.退出\n");
+		printf("|    3.修改\n");
+		printf("|    4.退出\n");
 		printf("|\n");
 		printf("==================\n");
 		ScanOption("请选择进入：", '1', '6', &op);
 		printf("\n");
 		switch (op)
 		{
-		case '4':
-			SaveStockToFile();
-			printf("保存完毕\n");
-			_sleep(500);
-			_clear();
-			break;
-		case '3':
-			LoadStockFromFile();
-			printf("加载完毕\n");
-			_sleep(500);
-			_clear();
-			break;
 		case '1':
 			OutputStock();
 			printf("\n按任意键继续... ");
@@ -219,11 +205,11 @@ void _stock()
 			_sleep(500);
 			_clear();
 			break;
-		case '6':
+		case '4':
 			if (ScanBoolean("确定退出嘛(y/n)："))
 				op = -52;
 			break;
-		case '5':
+		case '3':
 			ModifyStock();
 			printf("库存修改完毕\n");
 			_sleep(500);
@@ -233,6 +219,7 @@ void _stock()
 		if (op == -52)
 		{
 			SaveStockToFile();
+			_sleep(500);
 			_clear();
 			break;
 		}

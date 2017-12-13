@@ -231,30 +231,15 @@ void _user()
 		printf("|   4.删除会员\n");
 		printf("|   5.查询会员\n");
 		printf("|   6.列出会员\n");
-		printf("|   7.保存数据\n");
-		printf("|   8.加载数据\n");
-		printf("|   9.退出\n");
+		printf("|   7.退出\n");
 		printf("|\n");
 		printf("==================\n");
-		ScanOption("请选择进入：", '1', '9', &op);
+		ScanOption("请选择进入：", '1', '7', &op);
 		printf("\n");
 		switch (op)
 		{
 		case '1':
 			CreateCard();
-			_sleep(500);
-			_clear();
-			break;
-		case '7':
-			SaveUserToFile();
-			LoadUserFromFile();
-			printf("保存完毕\n");
-			_sleep(500);
-			_clear();
-			break;
-		case '8':
-			LoadUserFromFile();
-			printf("加载完毕\n");
 			_sleep(500);
 			_clear();
 			break;
@@ -296,7 +281,7 @@ void _user()
 			_sleep(500);
 			_clear();
 			break;
-		case '9':
+		case '7':
 			if (ScanBoolean("确定退出嘛(y/n)："))
 				op = -52;
 			break;
