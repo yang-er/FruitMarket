@@ -198,17 +198,19 @@ void ListAllVips()
 	}
 }
 
-bool ChangeVip(short vid) {
-	int i;
-	ScanInt("请输入要修改的内容:0.修改会员姓名,1.修改会员当日消费金额:", &i);
-	if (i == 0) {
-		ScanText("请输入新的会员姓名:", pUserTemp->name, 21);
-	}
-	else if (i == 1)
+bool ChangeVip(short uid) {
+	pUserTemp = GetCardById(uid);
+	if (pUserTemp == NULL)
 	{
-		ScanInt("请输入当日消费金额:", &pUserTemp->todayUsage);
+		printf("用户%04hd不存在！\n", uid);
+		return false;
 	}
-	return false;
+	if (ScanBoolean("是否修改会员姓名？(y/n)："))
+	{
+		memset(pUserTemp->name, 0x00, 21);
+		ScanText("新名称：", pUserTemp->name, 20);
+	}
+	return true;
 }
 
 void _user_test()
