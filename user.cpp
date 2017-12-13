@@ -3,7 +3,6 @@
 #include "math.h"
 #include "user.h"
 #include "structs.h"
-#include <sys/stat.h>
 
 struct user *pUserFront = NULL;
 struct user *pUserRear = NULL;
@@ -87,34 +86,37 @@ bool SaveUserToFile()
 
 bool ChargeToCard(short uid, int credit, bool isAdd)
 {
-	pUserTemp = pUserFront;
-	while (pUserTemp != NULL && pUserTemp->uid != uid)
+	if(pUserTemp == NULL || pUserTemp->uid != uid)
+		pUserTemp = GetCardById(uid);
+	
+	if (isAdd)
 	{
-		pUserTemp = pUserTemp->next;
-	}
-
-	if (pUserTemp == NULL)
-	{
-		printf("没有找到\n");
-		return false;
-	}
-	if (isAdd) {
 		if (pUserTemp->balance + credit > 1000000)
-			printf("充值失败\n");
+		{
+			printf("余额超过限制，充值失败。\n");
+			return false;
+		}
 		else
-			pUserTemp->balance = pUserTemp->balance + credit;
+		{
+			pUserTemp->balance += credit;
+			return true;
+		}
 	}
 	else
 	{
-		if (pUserTemp->balance - credit < 0 && uid != -1)
-			printf("余额不足,无法用会员卡消费\n");
-		else {
-			pUserTemp->balance = pUserTemp->balance - credit;
+		if (pUserTemp->balance < credit && uid != -1)
+		{
+			printf("余额不足，无法用会员卡消费。\n");
+			return false;
+		}
+		else
+		{
+			pUserTemp->balance -= credit;
 			pUserTemp->todayUsage += credit;
+			return true;
 		}
 	}
 	
-	return false;
 }
 
 void CreateCard()
@@ -213,108 +215,132 @@ bool ChangeVip(short uid) {
 	return true;
 }
 
-void _user_test()
+void _user()
 {
 	_clear();
 	char op;
-	while (1)
+	while (true)
 	{
-	printf("==================\n");
-	printf("|    用户\n");
-	printf("==================\n");
-	printf("|\n");
-	printf("|    1.创建单个会员\n");
-	printf("|    2.保存会员信息\n");
-	printf("|    3.加载会员信息\n");
-	printf("|    4.打印单个会员\n");
-	printf("|    5.打印全部会员\n");
-	printf("|    6.删除单个会员\n");
-	printf("|    7.充值或消费\n");
-	printf("|    8.修改会员信息\n");
-	printf("|    9.退出\n");
-	printf("|\n");
-	printf("==================\n");
-	ScanOption("请选择进入：", '1', '9', &op);
-	printf("\n");
-	switch (op)
-	{
-	case '1':
-		CreateCard();
-		break;
-	case '2':
-		SaveUserToFile();
-		break;
-	case '3':
-		LoadUserFromFile();
-		break;
-	case '4':
-		short i;
-		ScanShort("请输入会员卡号:", &i);
-		pUserTemp = pUserFront;
-		do {
-			pUserTemp = pUserTemp->next;
-		} while (pUserTemp != NULL && pUserTemp->uid != i);
-		if (pUserTemp == NULL)
-			printf("没有找到\n");
-		else
-			ListVip(pUserTemp);
-		pUserTemp = NULL;
-		break;
-	case '5':
-		ListAllVips();
-		break;
-	case '6':
-		CrashCard();
-		break;
-	case '9':
-		if (ScanBoolean("确定退出嘛(y/n)："))
-			op = -52;
-		break;
-	case '7':
-		//short j;
-		int j;
-		int k;
-		double m;
-		int n;
-		//ScanShort("请输入会员卡号(现金为'-1'):", &j);
-		ScanInt("请输入会员卡号(现金为'-1'):", &j);
-		bool isadd;
-		ScanInt("请输入充值或消费,1.充值,0.消费:", &k);
-		if (k == 1) {
-			isadd = true;
-			ScanDouble("请输入充值金额:", &m);
-		}
-		if (k == 0) {
-			isadd = false;
-			ScanDouble("请输入消费金额:", &m);
-		}
-		
-		if (m <= 0 || m > 1000)
-			printf("充值失败\n");
-		else {
-			n = (int)floor(m * 100 + 0.5);
-			ChargeToCard(j, n, isadd);
-		}
-		break;
+		printf("==================\n");
+		printf("|    用户系统\n");
+		printf("==================\n");
+		printf("|\n");
+		printf("|   1.办理会员\n");
+		printf("|   2.会员充值\n");
+		printf("|   3.修改信息\n");
+		printf("|   4.删除会员\n");
+		printf("|   5.查询会员\n");
+		printf("|   6.列出会员\n");
+		printf("|   7.保存数据\n");
+		printf("|   8.加载数据\n");
+		printf("|   9.退出\n");
+		printf("|\n");
+		printf("==================\n");
+		ScanOption("请选择进入：", '1', '9', &op);
+		printf("\n");
+		switch (op)
+		{
+		case '1':
+			CreateCard();
+			_sleep(500);
+			_clear();
+			break;
+		case '7':
+			SaveUserToFile();
+			LoadUserFromFile();
+			printf("保存完毕\n");
+			_sleep(500);
+			_clear();
+			break;
 		case '8':
+			LoadUserFromFile();
+			printf("加载完毕\n");
+			_sleep(500);
+			_clear();
+			break;
+		case '5':
+			// 打印单个会员
+			{
+				short i;
+				ScanShort("请输入会员卡号：", &i);
+				pUserTemp = GetCardById(i);
+				if (pUserTemp == NULL)
+				{
+					printf("没有找到该会员。\n");
+				}
+				else
+				{
+					printf("==================\n");
+					ListVip(pUserTemp);
+					pUserTemp = NULL;
+				}
+				printf("\n按任意键继续... ");
+				rewind(stdin);
+				getchar();
+				rewind(stdin);
+				_clear();
+			}
+			break;
+		case '6':
+			// 打印所有会员
+			ListAllVips();
+			printf("\n按任意键继续... ");
+			rewind(stdin);
+			getchar();
+			rewind(stdin);
+			_clear();
+			break;
+		case '4':
+			if(CrashCard())
+				printf("删除卡成功。\n");
+			_sleep(500);
+			_clear();
+			break;
+		case '9':
+			if (ScanBoolean("确定退出嘛(y/n)："))
+				op = -52;
+			break;
+		case '2':
+			// 单个卡充值
+			{
+				short j;
+				double m;
+				int n;
+				ScanShort("请输入会员卡号：", &j);
+				ScanDouble("请输入充值金额：", &m);
+				if (m <= 0 || m > 1000)
+				{
+					printf("充值失败，请检查您输入的金额。\n");
+					_sleep(500);
+				}
+				else
+				{
+					n = (int)floor(m * 100 + 0.5);
+					if (ChargeToCard(j, (int)floor(m * 100 + 0.5), true))
+						printf("充值成功。\n");
+				}
+				_sleep(500);
+				_clear();
+			}
+			break;
+		case '3':
 			short i1;
 			ScanShort("请输入会员卡号:", &i1);
-			pUserTemp = pUserFront;
-			while (pUserTemp->next != NULL && pUserTemp->next->uid != i1)
-				pUserTemp = pUserTemp->next;
-			if (pUserTemp->next == NULL)
-			{
-				printf("用户%04hd不存在！\n", i1);
-			
-			}
-			else
 			ChangeVip(i1);
-			//pUserTemp = NULL;
+			printf("修改结束。\n");
+			_sleep(500);
+			_clear();
 			break;
-	default:
-		break;
-}
-if (op == -52)
-break;
+		default:
+			break;
+		}
+		if (op == -52)
+		{
+			SaveUserToFile();
+			LoadUserFromFile();
+			_sleep(500);
+			_clear();
+			break;
+		}
 	}
 }

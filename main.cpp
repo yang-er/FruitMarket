@@ -6,7 +6,6 @@
 
 struct user *user_list;
 
-extern void _user_test();
 extern void _ticket_test();
 extern void _main_test();
 
@@ -43,7 +42,7 @@ void _main_test()
 			_stock();
 			break;
 		case '2':
-			_user_test();
+			_user();
 			break;
 		case '3':
 			_ticket_test();

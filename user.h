@@ -36,3 +36,6 @@ void ListAllVips();
  ///<summary>修改用户信息</summary>
 ///<param name="uid" type="Short">用户编号</param>
 bool ChangeVip(short vid);
+
+/// <summary>进入用户模块</summary>
+void _user();
