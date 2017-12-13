@@ -22,6 +22,9 @@ int main()
 	LoadTicketFromFile();
 	LoadUserFromFile();
 	_main_test();
+	SaveUserToFile();
+	SaveTicketToFile();
+	SaveStockToFile();
 #ifdef DEBUG
 	system("pause");
 #endif
