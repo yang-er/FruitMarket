@@ -2,6 +2,7 @@
 #include "scan.h"
 #include "math.h"
 #include "user.h"
+#include "structs.h"
 
 struct user _defalut_user = { "现金", -1, 0, 0, NULL };
 struct user *pUserFront = &_defalut_user;
@@ -27,16 +28,48 @@ bool SaveUserToFile()
 
 bool ChargeToCard(short uid, int credit, bool isAdd)
 {
+	pUserTemp = pUserFront;
+	do {
+		pUserTemp = pUserTemp->next;
+	} while (pUserTemp != NULL && pUserTemp->uid != uid);
+	if (pUserTemp == NULL)
+	{
+		printf("没有找到\n");
+		return false;
+	}
+	if (isAdd) {
+		if (pUserTemp->balance + credit > 1000000)
+			printf("充值失败");
+		else
+			pUserTemp->balance = pUserTemp->balance + credit;
+	}
+	else
+	{
+		if (pUserTemp->balance - credit < 0)
+			printf("余额不足,无法用会员卡消费");
+		else
+			pUserTemp->balance = pUserTemp->balance - credit;
+	}
 	return false;
 }
 
 void CreateCard()
 {
+	struct user *q;
 	do {
 		pUserTemp = (struct user *)malloc(sizeof(struct user));
 		memset(pUserTemp, 0x00, sizeof(struct user));
 		ScanText("请输入持卡人签名:", pUserTemp->name, 21);
 		ScanShort("请输入编号:", &pUserTemp->uid);
+			q = pUserFront;
+				do {
+					q = q->next;
+				} while (q != NULL && q->uid != pUserTemp->uid);
+				if (q != NULL)
+				{
+					printf("会员已存在,请重新输入\n");
+					ScanShort("请输入编号:", &pUserTemp->uid);
+				}
 		double money;
 		ScanDouble("请输入会员卡余额:", &money);
 		pUserTemp->balance = (int)floor(money * 100 + 0.5);
@@ -49,9 +82,20 @@ void CreateCard()
 bool CrashCard()
 {
 	short i;
-	ScanShort("请输入会员卡号", &i);
-	while (pUserFront != NULL && pUserFront->uid == i)
+	ScanShort("请输入会员卡号:", &i);
+	pUserTemp = pUserFront;
+	while (pUserTemp != NULL && pUserTemp->uid == i)
+		pUserTemp = pUserTemp->next;
+	struct user *q = NULL, *p =pUserTemp;
+	while (p != NULL)
+	{
+		if (p->uid == i)
+			q->next = p->next;
 
+		else
+			q = p;
+		p = p->next;
+	}
 	return false;
 }
 
@@ -84,8 +128,8 @@ void _user_test()
 	char op;
 	while (1)
 	{
-	printf("1.创建单个会员并保存 2.加载会员信息 3.加载单个会员 4.加载全部会员 5.删除单个会员 6.退出\n");
-	ScanOption("请选择进入：", '1', '6', &op);
+	printf("1.创建单个会员 2.加载会员信息 3.加载单个会员 4.加载全部会员 5.删除单个会员 6.退出 7.充值或消费\n");
+	ScanOption("请选择进入：", '1', '7', &op);
 	switch (op)
 	{
 	case '1':
@@ -97,8 +141,8 @@ void _user_test()
 	case '3':
 		short i;
 		ScanShort("请输入会员卡号:", &i);
+		pUserTemp = pUserFront;
 		do {
-			pUserTemp = pUserFront;
 			pUserTemp = pUserTemp->next;
 		} while (pUserTemp != NULL && pUserTemp->uid != i);
 		if (pUserTemp == NULL)
@@ -116,6 +160,28 @@ void _user_test()
 	case '6':
 		if (ScanBoolean("确定退出嘛(y/n)："))
 			op = -52;
+	case '7':
+		short j;
+		int k;
+		double m;
+		int n;
+		ScanShort("请输入会员卡号(现金为'-1'):", &j);
+		if (j == -1)
+			break;
+		bool isadd;
+		ScanInt("请输入充值或消费,1.充值,0.消费", &k);
+		if (k == 1)
+			isadd = true;
+		if (k == 0)
+			isadd = false;
+		ScanDouble("请输入充值金额:", &m);
+		if (m <= 0 || m > 1000)
+			printf("充值失败");
+		else {
+			n = (int)floor(m * 100 + 0.5);
+			ChargeToCard(j, n, isadd);
+		}
+		break;
 	default:
 		break;
 }
