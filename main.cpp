@@ -4,7 +4,7 @@
 #include "stock.h"
 #include "scan.h"
 
-struct stock warehouse[5];
+struct user *user_list;
 
 extern void _stock_test();
 extern void _user_test();

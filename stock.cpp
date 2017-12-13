@@ -2,9 +2,10 @@
 #include "structs.h"
 #include "scan.h"
 #include "math.h"
+#include "stock.h"
 
 const char* pfStock = "stock.dat";
-extern struct stock warehouse[5];
+struct stock warehouse[5];
 
 bool LoadStockFromFile()
 {
@@ -106,7 +107,7 @@ bool AddStock()
 	{
 		double count;
 		ScanDouble("请输入要增加的数量：", &count);
-		warehouse[id].left += ceil(count * 20);
+		warehouse[id].left += (int)ceil(count * 20);
 	}
 	return true;
 }

@@ -1,37 +1,35 @@
 #include "stdafx.h"
-#include "structs.h"
 #include "scan.h"
 #include "math.h"
-FILE *file;
-/// <summary>
-/// 从文件加载用户信息。
-/// </summary>
-struct user *LoadUserFromFile()
+#include "user.h"
+
+struct user *pUserFront = NULL;
+struct user *pUserRear = NULL;
+struct user *pUserTemp = NULL;
+const char *pfUser = "user.dat";
+
+
+void LoadUserFromFile()
 {
 	
-	return NULL;
+	return;
 }
 
-/// <summary>
-/// 将用户信息保存到文件。
-/// </summary>
-bool SaveUserToFile(struct user* vip)
+bool SaveUserToFile()
 {
-	if ((file = fopen("user.dat", "w+")) == NULL)
-	{
-		printf("打开失败\n");
-		exit(0);
-	}
+	FILE *pFile;
+	pFile = fopen(pfUser, "w+");
+	CheckFile(pFile, pfUser);
 	
 	return false;
 }
 
-bool ChargeToCard(int uid, int credit, bool isAdd)
+bool ChargeToCard(short uid, int credit, bool isAdd)
 {
 	return false;
 }
 
-struct user *createCard()
+void CreateCard()
 {
 	struct user *head = NULL;
 	struct user *p1, *p2 = NULL;
@@ -52,10 +50,9 @@ struct user *createCard()
 			ScanInt("请输入是否继续保存:1.是,0.否", &j);
 	}
 	p2->next = NULL;
-	return head;
 }
 
-bool CrashCard(int uid)
+bool CrashCard()
 {
 	return false;
 }
@@ -73,14 +70,14 @@ bool ListVip(struct user* current)
 	return false;
 }
 
-bool ListAllVips(struct user* vipHead)
+void ListAllVips()
 {
-	while (vipHead != NULL)
+	pUserTemp = pUserFront;
+	while (pUserTemp != NULL)
 	{
-		ListVip(vipHead);
-		vipHead = vipHead->next;
+		ListVip(pUserTemp);
+		pUserTemp = pUserTemp->next;
 	}
-	return false;
 }
 
 void printvip(struct user* vipHead) {
@@ -103,11 +100,10 @@ void inputuid()
 {
 	short i;
 	ScanShort("请输入会员卡号:", &i);
-	CrashCard(i);
+	CrashCard();
 }
 void _user_test()
 {
-	struct user *p=NULL;
 	char op;
 	while (1)
 	{
@@ -116,16 +112,16 @@ void _user_test()
 	switch (op)
 	{
 	case '1':
-		p=createCard();
+		CreateCard();
 		break;
 	case '2':
 		LoadUserFromFile();
 		break;
 	case '3':
-		printvip(p);
+		printvip(NULL);
 		break;
 	case '4':
-		ListAllVips(p);
+		ListAllVips();
 		break;
 	case '5':
 		inputuid();

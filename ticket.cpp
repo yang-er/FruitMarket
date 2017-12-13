@@ -1,18 +1,24 @@
 #include "stdafx.h"
 #include "structs.h"
 #include "scan.h"
+#include "ticket.h"
 
-struct ticket *LoadTicketFromFile()
+struct ticket *pTicketFront = NULL;
+struct ticket *pTicketRear = NULL;
+struct ticket *pTicketTemp = NULL;
+const char *pfTicket = "ticket.dat";
+
+void LoadTicketFromFile()
 {
-	return NULL;
+	return;
 }
 
-bool SaveTicketToFile(struct ticket *)
+bool SaveTicketToFile()
 {
 	return false;
 }
 
-bool AddTicket(struct ticket* ticketEnd)
+bool AddTicket()
 { 
 	return false;
 }
@@ -21,7 +27,7 @@ void OutputTicket(struct ticket* ticket)
 {
 }
 
-void OutputAllTickets(struct ticket* ticketHead) 
+void OutputAllTickets() 
 {
 }
 
