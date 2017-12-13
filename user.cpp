@@ -15,6 +15,18 @@ void LoadUserFromFile()
 	struct stat pStat;
 	stat(pfUser, &pStat);
 
+	// 清空内存中的用户
+	while (pUserFront != NULL)
+	{
+		pUserTemp = pUserFront;
+		pUserFront = pUserFront->next;
+		pUserTemp->next = NULL;
+		memset(pUserTemp, 0x00, sizeof(struct user));
+		free(pUserTemp);
+	}
+	pUserRear = NULL;
+	pUserTemp = NULL;
+
 	// 文件不存在的时候初始化为空数组
 	if (stat(pfUser, &pStat) == -1)
 	{
@@ -49,6 +61,9 @@ void LoadUserFromFile()
 	}
 	fclose(pFile);
 
+	pUserFront->balance = 0;
+	pUserFront->todayUsage = 0;
+
 }
 
 bool SaveUserToFile()
@@ -61,6 +76,7 @@ bool SaveUserToFile()
 		pUserFront = pUserFront->next;
 		pUserTemp->next = NULL;
 		fwrite(pUserTemp, sizeof(struct user), 1, pFile);
+		memset(pUserTemp, 0x00, sizeof(struct user));
 		free(pUserTemp);
 	}
 	pUserRear = NULL;
@@ -103,14 +119,20 @@ bool ChargeToCard(short uid, int credit, bool isAdd)
 
 void CreateCard()
 {
-	struct user *q=NULL;
 	do {
 		pUserTemp = (struct user *)malloc(sizeof(struct user));
 		memset(pUserTemp, 0x00, sizeof(struct user));
-		ScanText("请输入持卡人签名:", pUserTemp->name, 21);
-		ScanShort("请输入编号:", &pUserTemp->uid);
+		ScanShort("请输入卡号：", &pUserTemp->uid);
+		if (GetCardById(pUserTemp->uid) != NULL)
+		{
+			printf("会员卡%04d已存在！\n", pUserTemp->uid);
+			free(pUserTemp);
+			pUserTemp = NULL;
+			continue;
+		}
+		ScanText("请输入持卡人姓名：", pUserTemp->name, 21);
 		double money;
-		ScanDouble("请输入会员卡余额:", &money);
+		ScanDouble("请输入会员卡余额：", &money);
 		pUserTemp->balance = (int)floor(money * 100 + 0.5);
 		pUserRear->next = pUserTemp;
 		pUserRear = pUserRear->next;
@@ -118,41 +140,56 @@ void CreateCard()
 	} while (ScanBoolean("是否继续输入？(y/n)："));
 }
 
+struct user *GetCardById(short uid)
+{
+	struct user* temp;
+	temp = pUserFront;
+	while (temp != NULL && temp->uid != uid)
+		temp = temp->next;
+	return temp;
+}
+
 bool CrashCard()
 {
 	short i;
 	ScanShort("请输入会员卡号:", &i);
 	pUserTemp = pUserFront;
-	while (pUserTemp != NULL && pUserTemp->uid == i)
+	while (pUserTemp->next != NULL && pUserTemp->next->uid != i)
 		pUserTemp = pUserTemp->next;
-	struct user *q = NULL, *p =pUserTemp;
-	while (p != NULL)
+	if (pUserTemp->next == NULL)
 	{
-		if (p->uid == i)
-			q->next = p->next;
-
-		else
-			q = p;
-		p = p->next;
+		printf("用户%04hd不存在！\n", i);
+		pUserTemp = NULL;
+		return false;
 	}
-	return false;
+	else
+	{
+		struct user *temp = pUserTemp->next;
+		pUserTemp->next = temp->next;
+		memset(temp, 0x00, sizeof(struct user));
+		free(temp);
+		pUserTemp = NULL;
+		return true;
+	}
 }
 
 bool ListVip(struct user* current)
 {
+	printf("|\n");
+	printf("|  姓名：%s\n", current->name);
+	printf("|  卡号：%04hd\n", current->uid);
+	printf("|  余额：%d.%02d\n", current->balance / 100, current->balance % 100);
+	printf("|  已用：%d.%02d\n", current->todayUsage / 100, current->todayUsage % 100);
+	printf("|\n");
 	printf("==================\n");
-	printf("|    会员信息\n");
-	printf("==================\n");
-	printf("\n");
-	printf("会员姓名:%s\n", current->name);
-	printf("会员卡号:%04hd\n", current->uid);
-	printf("用户余额:%d.%02d\n", current->balance / 100, current->balance % 100);
-	printf("今日开销:%d.%02d\n", current->todayUsage / 100, current->todayUsage % 100);
 	return false;
 }
 
 void ListAllVips()
 {
+	printf("==================\n");
+	printf("|    会员信息\n");
+	printf("==================\n");
 	pUserTemp = pUserFront->next;
 	while (pUserTemp != NULL)
 	{
