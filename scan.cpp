@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "scan.h"
-#include <ctype.h>
 
 static int scanf_result = 0;
 time_t pTime = 0;
@@ -207,6 +206,8 @@ void SetCurrentDate()
 		pTime = mktime(pCurrentDate);
 	}
 }
+
+#define isspace(c) ((c>=0&&c<=' ')||c==0x7f)
 
 void trim(char *buf, size_t len)
 {

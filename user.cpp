@@ -87,7 +87,7 @@ bool ChargeToCard(short uid, int credit, bool isAdd)
 
 	if (isAdd)
 	{
-		if (pUserTemp->balance + credit > 1000000)
+		if (pUserTemp->balance + credit > 1000000 || pUserTemp->balance + credit < 0)
 		{
 			printf("余额超过限制，充值失败。\n");
 			return false;
@@ -131,6 +131,13 @@ void CreateCard()
 		double money;
 		ScanDouble("请输入会员卡余额：", &money);
 		pUserTemp->balance = (int)floor(money * 100 + 0.5);
+		if (pUserTemp->balance > 1000000 || pUserTemp->balance < 0)
+		{
+			printf("余额超过限制，建卡失败。\n");
+			_free(pUserTemp, user);
+			pUserTemp = NULL;
+			continue;
+		}
 		pUserRear->next = pUserTemp;
 		pUserRear = pUserRear->next;
 		pUserTemp = NULL;
@@ -275,6 +282,7 @@ void _user()
 				double m;
 				int n;
 				ScanShort("请输入会员卡号：", &j);
+				pUserTemp = GetCardById(j);
 				if (pUserTemp == NULL)
 				{
 					printf("用户%04hd不存在！\n", j);

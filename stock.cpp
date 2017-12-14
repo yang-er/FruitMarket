@@ -86,9 +86,9 @@ void OutputStock()
 		}
 		else
 		{
-			printf("|  剩余：%.2lf\n", warehouse[i].left / 20.0);
-			printf("|  卖出：%.2lf\n", warehouse[i].sold / 20.0);
-			printf("|  今销：%.2lf\n", warehouse[i].todayUsage / 20.0);
+			printf("|  剩余：%.2lf\n", warehouse[i].left / 100.0);
+			printf("|  卖出：%.2lf\n", warehouse[i].sold / 100.0);
+			printf("|  今销：%.2lf\n", warehouse[i].todayUsage / 100.0);
 		}
 		printf("|\n");
 		printf("==================\n");
@@ -114,12 +114,22 @@ bool AddStock()
 		int count;
 		ScanInt("请输入要增加的数量：", &count);
 		warehouse[id].left += count;
+		if (warehouse[id].left > 100 || warehouse[id].left <= 0)
+		{
+			printf("爆仓了。自动将库存减到100。\n");
+			warehouse[id].left = 100;
+		}
 	}
 	else
 	{
 		double count;
 		ScanDouble("请输入要增加的数量：", &count);
-		warehouse[id].left += (int)ceil(count * 20);
+		warehouse[id].left += (int)ceil(count * 100);
+		if (warehouse[id].left > 10000 || warehouse[id].left <= 0)
+		{
+			printf("爆仓了。自动将库存减到100。\n");
+			warehouse[id].left = 10000;
+		}
 	}
 	return true;
 }
