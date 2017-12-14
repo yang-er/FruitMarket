@@ -84,7 +84,7 @@ bool ChargeToCard(short uid, int credit, bool isAdd)
 {
 	if(pUserTemp == NULL || pUserTemp->uid != uid)
 		pUserTemp = GetCardById(uid);
-	
+
 	if (isAdd)
 	{
 		if (pUserTemp->balance + credit > 1000000)
@@ -275,6 +275,12 @@ void _user()
 				double m;
 				int n;
 				ScanShort("请输入会员卡号：", &j);
+				if (pUserTemp == NULL)
+				{
+					printf("用户%04hd不存在！\n", j);
+					sleep(500);
+					break;
+				}
 				ScanDouble("请输入充值金额：", &m);
 				if (m <= 0 || m > 1000)
 				{
