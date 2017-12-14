@@ -2,7 +2,7 @@
 #include <time.h>
 
 /// <summary>购物小票</summary>
-struct ticket {
+typedef struct ticket {
 
 	/// <summary>序号（编号0001-9999）</summary>
 	short tid;
@@ -25,10 +25,10 @@ struct ticket {
 	/// <summary>链表的下一个节点</summary>
 	struct ticket *next;
 
-};
+} ticket;
 
 /// <summary>商品库存</summary>
-struct stock {
+typedef struct stock {
 
 	/// <summary>水果名称</summary>
 	char fruitName[21];
@@ -56,10 +56,10 @@ struct stock {
 	/// <summary>一盒多少个</summary>
 	int boxCount;
 
-};
+} stock;
 
 /// <summary>会员卡用户</summary>
-struct user {
+typedef struct user {
 
 	/// <summary>持卡人签名</summary>
 	char name[21];
@@ -76,4 +76,4 @@ struct user {
 	/// <summary>链表的下一个节点</summary>
 	struct user *next;
 
-};
+} user;

@@ -3,9 +3,9 @@
 #include "scan.h"
 #include "ticket.h"
 
-struct ticket *pTicketFront = NULL;
-struct ticket *pTicketRear = NULL;
-struct ticket *pTicketTemp = NULL;
+ticket *pTicketFront = NULL;
+ticket *pTicketRear = NULL;
+ticket *pTicketTemp = NULL;
 const char *pfTicket = "ticket.dat";
 
 void LoadTicketFromFile()
@@ -23,7 +23,7 @@ bool AddTicket()
 	return false;
 }
 
-void OutputTicket(struct ticket* ticket) 
+void OutputTicket(ticket* ticket) 
 {
 }
 
@@ -31,7 +31,7 @@ void OutputAllTickets()
 {
 }
 
-struct ticket *FindTicket(short tid)
+ticket *FindTicket(short tid)
 {
 	return NULL;
 }

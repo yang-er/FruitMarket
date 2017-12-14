@@ -4,18 +4,12 @@
 #include "stock.h"
 #include "scan.h"
 
-struct user *user_list;
-
 extern void _ticket_test();
 extern void _main_test();
 
 int main()
 {
-	time_t p;
-	struct tm*cur;
-	time(&p);
-	cur = localtime(&p);
-	printf("目前时间：%s", asctime(cur));
+	SetCurrentDate();
 	LoadStockFromFile();
 	LoadTicketFromFile();
 	LoadUserFromFile();
@@ -56,4 +50,9 @@ void _main_test()
 		if (op == -52)
 			break;
 	}
+}
+
+void PushDate()
+{
+
 }

@@ -1,4 +1,59 @@
 #pragma once
+#include <time.h>
+#include <sys/stat.h>
+
+#ifdef __cplusplus
+	#define __extern extern "C"
+#else
+	#define __extern extern
+#endif
+
+// 清空stdin的多余内容
+#define flush() rewind(stdin)
+
+// 文件p是否存在
+#define file_exists(p) (_access(p, 0) != EOF)
+
+// 申请内存并清零
+#define _alloc(p,T) { \
+	p = (T*) malloc(sizeof(T)); \
+	memset(p, 0x00, sizeof(T)); \
+}
+
+// 清零并释放内存
+#define _free(p,T) { \
+	memset(p, 0x00, sizeof(T)); \
+	free(p); \
+}
+
+// 按任意键继续
+#define pause() { \
+	printf("\n请按任意键继续. . . "); \
+	flush(); \
+	getchar(); \
+	flush(); \
+}
+
+#ifdef WINVER
+	// 清屏幕
+	#define clear() system("cls")
+	// 详见<Windows.h, Kernel32.lib>
+	__extern void __stdcall Sleep(unsigned long dwMilliseconds);
+	// 暂停a毫秒
+	#define sleep(a) Sleep(a)
+#else
+	#include <unistd.h>
+	// 清屏幕
+	#define clear() system("clear")
+	// 暂停a毫秒
+	#define sleep(a) usleep(a*1000)
+#endif
+
+// 交换数值类型a和b的值
+#define swap(a,b) a^=b^=a^=b
+
+extern time_t pTime;
+extern struct tm *pCurrentDate;
 
 /// <summary>读取一个0001-9999的数字</summary>
 /// <param name="message" type="String">显示的消息</param>
@@ -31,3 +86,23 @@ void ScanOption(const char* message, const char min, const char max, char *c);
 /// <summary>扫描是 / 否选项</summary>
 /// <param name="message" type="String">显示的消息</param>
 bool ScanBoolean(const char* message);
+
+/// <summary>检查文件是否打开成功</summary>
+/// <param name="pFile" type="File">要检查的文件指针</param>
+/// <param name="pszName" type="String">文件名</param>
+void CheckFile(FILE* pFile, const char* pszName);
+
+/// <summary>文件被破坏时退出</summary>
+/// <param name="pFile" type="File">文件指针</param>
+/// <param name="pszName" type="String">文件名</param>
+void DataNotFulfilled(FILE* pFile, const char* pszName);
+
+/// <summary>扫描时间</summary>
+/// <param name="message" type="String">显示的消息</param>
+time_t ScanTime(const char* message);
+
+/// <summary>初始化当前日期</summary>
+void SetCurrentDate();
+
+/// <summary>进入第二天</summary>
+void PushDate();

@@ -1,7 +1,7 @@
 #pragma once
 #include "structs.h"
 
-extern struct stock warehouse[5];
+extern stock warehouse[5];
 
 /// <summary>从文件中加载库存信息</summary>
 bool LoadStockFromFile();

@@ -5,7 +5,7 @@
 #include "stock.h"
 
 const char* pfStock = "stock.dat";
-struct stock warehouse[5];
+stock warehouse[5];
 
 /// <summary>从文件中加载库存信息</summary>
 bool LoadStockFromFile()
@@ -28,7 +28,7 @@ bool LoadStockFromFile()
 	// 读取文件内容
 	pFile = fopen(pfStock, "r");
 	CheckFile(pFile, pfStock);
-	struct stock *pStock;
+	stock *pStock;
 	char isSingle;
 	int pFlag;
 	for (int i = 0; i < 5; i++)
@@ -52,7 +52,7 @@ bool SaveStockToFile()
 	FILE *pFile;
 	pFile = fopen(pfStock, "w");
 	CheckFile(pFile, pfStock);
-	struct stock *pStock;
+	stock *pStock;
 	for (int i = 0; i < 5; i++)
 	{
 		pStock = warehouse + i;
@@ -149,12 +149,10 @@ bool ModifyStock()
 	// 获取进货数量
 	if (ScanBoolean("是否修改名称？(y/n)："))
 	{
-		memset(warehouse[id].fruitName, 0x00, 21);
 		ScanText("新名称：", warehouse[id].fruitName, 20);
 	}
 	if (ScanBoolean("是否修改单位？(y/n)："))
 	{
-		memset(warehouse[id].tagName, 0x00, 21);
 		ScanText("单位名称：", warehouse[id].tagName, 20);
 	}
 	if (ScanBoolean("是否修改单价？(y/n)："))
@@ -173,7 +171,7 @@ bool ModifyStock()
 /// <summary>进入仓库模式</summary>
 void _stock()
 {
-	_clear();
+	clear();
 	char op;
 	while (true)
 	{
@@ -187,23 +185,18 @@ void _stock()
 		printf("|    4.退出\n");
 		printf("|\n");
 		printf("==================\n");
-		ScanOption("请选择进入：", '1', '6', &op);
+		ScanOption("请选择进入：", '1', '4', &op);
 		printf("\n");
 		switch (op)
 		{
 		case '1':
 			OutputStock();
-			printf("\n按任意键继续... ");
-			rewind(stdin);
-			getchar();
-			rewind(stdin);
-			_clear();
+			pause();
 			break;
 		case '2':
 			AddStock();
 			printf("添加完毕\n");
-			_sleep(500);
-			_clear();
+			sleep(500);
 			break;
 		case '4':
 			if (ScanBoolean("确定退出嘛(y/n)："))
@@ -212,16 +205,20 @@ void _stock()
 		case '3':
 			ModifyStock();
 			printf("库存修改完毕\n");
-			_sleep(500);
-			_clear();
+			sleep(500);
 			break;
 		}
+
+		// 退出时保存库存信息
 		if (op == -52)
 		{
 			SaveStockToFile();
-			_sleep(500);
-			_clear();
+			sleep(500);
+			clear();
 			break;
 		}
+
+		// 清屏幕
+		clear();
 	}
 }

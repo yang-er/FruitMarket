@@ -4,9 +4,9 @@
 #include "user.h"
 #include "structs.h"
 
-struct user *pUserFront = NULL;
-struct user *pUserRear = NULL;
-struct user *pUserTemp = NULL;
+user *pUserFront = NULL;
+user *pUserRear = NULL;
+user *pUserTemp = NULL;
 const char *pfUser = "user.dat";
 
 void LoadUserFromFile()
@@ -20,8 +20,7 @@ void LoadUserFromFile()
 		pUserTemp = pUserFront;
 		pUserFront = pUserFront->next;
 		pUserTemp->next = NULL;
-		memset(pUserTemp, 0x00, sizeof(struct user));
-		free(pUserTemp);
+		_free(pUserTemp, user);
 	}
 	pUserRear = NULL;
 	pUserTemp = NULL;
@@ -29,8 +28,7 @@ void LoadUserFromFile()
 	// 文件不存在的时候初始化为空数组
 	if (stat(pfUser, &pStat) == -1)
 	{
-		pUserTemp = (struct user*) malloc(sizeof(struct user));
-		memset(pUserTemp, 0x00, sizeof(struct user));
+		_alloc(pUserTemp, user);
 		strcpy(pUserTemp->name, "现金");
 		pUserTemp->uid = -1;
 		pUserFront = pUserTemp;
@@ -40,17 +38,16 @@ void LoadUserFromFile()
 	}
 
 	// 检测文件完整度
-	if (pStat.st_size % sizeof(struct user) != 0)
+	if (pStat.st_size % sizeof(user) != 0)
 		DataNotFulfilled(NULL, pfUser);
 
 	// 打开文件
 	FILE *pFile = fopen(pfUser, "r");
 	CheckFile(pFile, pfUser);
-	for (int i = 0; i < pStat.st_size / sizeof(struct user); i++)
+	for (int i = 0; i < pStat.st_size / sizeof(user); i++)
 	{
-		pUserTemp = (struct user*) malloc(sizeof(struct user));
-		memset(pUserTemp, 0x00, sizeof(struct user));
-		fread(pUserTemp, sizeof(struct user), 1, pFile);
+		_alloc(pUserTemp, user);
+		fread(pUserTemp, sizeof(user), 1, pFile);
 		if (*((char*)pUserTemp) == -1)
 			printf("gg");
 		if (pUserFront == NULL) pUserFront = pUserTemp;
@@ -74,9 +71,8 @@ bool SaveUserToFile()
 		pUserTemp = pUserFront;
 		pUserFront = pUserFront->next;
 		pUserTemp->next = NULL;
-		fwrite(pUserTemp, sizeof(struct user), 1, pFile);
-		memset(pUserTemp, 0x00, sizeof(struct user));
-		free(pUserTemp);
+		fwrite(pUserTemp, sizeof(user), 1, pFile);
+		_free(pUserTemp, user);
 	}
 	pUserRear = NULL;
 	pUserTemp = NULL;
@@ -122,13 +118,12 @@ bool ChargeToCard(short uid, int credit, bool isAdd)
 void CreateCard()
 {
 	do {
-		pUserTemp = (struct user *)malloc(sizeof(struct user));
-		memset(pUserTemp, 0x00, sizeof(struct user));
+		_alloc(pUserTemp, user);
 		ScanShort("请输入卡号：", &pUserTemp->uid);
 		if (GetCardById(pUserTemp->uid) != NULL)
 		{
 			printf("会员卡%04d已存在！\n", pUserTemp->uid);
-			free(pUserTemp);
+			_free(pUserTemp, user);
 			pUserTemp = NULL;
 			continue;
 		}
@@ -142,9 +137,9 @@ void CreateCard()
 	} while (ScanBoolean("是否继续输入？(y/n)："));
 }
 
-struct user *GetCardById(short uid)
+user *GetCardById(short uid)
 {
-	struct user* temp;
+	user* temp;
 	temp = pUserFront;
 	while (temp != NULL && temp->uid != uid)
 		temp = temp->next;
@@ -166,16 +161,15 @@ bool CrashCard()
 	}
 	else
 	{
-		struct user *temp = pUserTemp->next;
+		user *temp = pUserTemp->next;
 		pUserTemp->next = temp->next;
-		memset(temp, 0x00, sizeof(struct user));
-		free(temp);
+		_free(temp, user);
 		pUserTemp = NULL;
 		return true;
 	}
 }
 
-bool ListVip(struct user* current)
+bool ListVip(user* current)
 {
 	printf("|\n");
 	printf("|  姓名：%s\n", current->name);
@@ -209,7 +203,6 @@ bool ChangeVip(short uid) {
 	}
 	if (ScanBoolean("是否修改会员姓名？(y/n)："))
 	{
-		memset(pUserTemp->name, 0x00, 21);
 		ScanText("新名称：", pUserTemp->name, 20);
 	}
 	return true;
@@ -217,7 +210,7 @@ bool ChangeVip(short uid) {
 
 void _user()
 {
-	_clear();
+	clear();
 	char op;
 	while (true)
 	{
@@ -240,8 +233,7 @@ void _user()
 		{
 		case '1':
 			CreateCard();
-			_sleep(500);
-			_clear();
+			sleep(500);
 			break;
 		case '5':
 			// 打印单个会员
@@ -259,27 +251,18 @@ void _user()
 					ListVip(pUserTemp);
 					pUserTemp = NULL;
 				}
-				printf("\n按任意键继续... ");
-				rewind(stdin);
-				getchar();
-				rewind(stdin);
-				_clear();
+				pause();
 			}
 			break;
 		case '6':
 			// 打印所有会员
 			ListAllVips();
-			printf("\n按任意键继续... ");
-			rewind(stdin);
-			getchar();
-			rewind(stdin);
-			_clear();
+			pause();
 			break;
 		case '4':
 			if(CrashCard())
 				printf("删除卡成功。\n");
-			_sleep(500);
-			_clear();
+			sleep(500);
 			break;
 		case '7':
 			if (ScanBoolean("确定退出嘛(y/n)："))
@@ -296,7 +279,7 @@ void _user()
 				if (m <= 0 || m > 1000)
 				{
 					printf("充值失败，请检查您输入的金额。\n");
-					_sleep(500);
+					sleep(500);
 				}
 				else
 				{
@@ -304,8 +287,7 @@ void _user()
 					if (ChargeToCard(j, (int)floor(m * 100 + 0.5), true))
 						printf("充值成功。\n");
 				}
-				_sleep(500);
-				_clear();
+				sleep(500);
 			}
 			break;
 		case '3':
@@ -313,8 +295,7 @@ void _user()
 			ScanShort("请输入会员卡号:", &i1);
 			ChangeVip(i1);
 			printf("修改结束。\n");
-			_sleep(500);
-			_clear();
+			sleep(500);
 			break;
 		default:
 			break;
@@ -323,9 +304,10 @@ void _user()
 		{
 			SaveUserToFile();
 			LoadUserFromFile();
-			_sleep(500);
-			_clear();
+			sleep(500);
+			clear();
 			break;
 		}
+		clear();
 	}
 }

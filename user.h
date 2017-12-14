@@ -2,8 +2,9 @@
 #include "stdafx.h"
 #include "structs.h"
 
-extern struct user *pUserFront;
-extern struct user *pUserRear;
+extern user *pUserFront;
+extern user *pUserRear;
+extern user *pUserTemp;
 
 /// <summary>从文件加载用户信息</summary>
 void LoadUserFromFile();
@@ -19,7 +20,7 @@ bool CrashCard();
 
 /// <summary>按卡号找卡记录</summary>
 /// <param name="uid" type="Short">用户编号</param>
-struct user *GetCardById(short uid);
+user *GetCardById(short uid);
 
 /// <summary>向卡内充值</summary>
 /// <param name="uid" type="Short">用户编号</param>
@@ -29,7 +30,7 @@ bool ChargeToCard(short uid, int credit, bool isAdd);
 
 /// <summary>列出用户信息</summary>
 /// <param name="current" type="User">当前的会员</param>
-bool ListVip(struct user *current);
+bool ListVip(user *current);
 
 /// <summary>列出所有的用户</summary>
 void ListAllVips();
