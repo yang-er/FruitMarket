@@ -7,12 +7,12 @@
 user *pUserFront = NULL;
 user *pUserRear = NULL;
 user *pUserTemp = NULL;
+
 const char *pfUser = "user.dat";
 
 void LoadUserFromFile()
 {
 	struct stat pStat;
-	stat(pfUser, &pStat);
 
 	// 清空内存中的用户
 	while (pUserFront != NULL)
@@ -119,6 +119,8 @@ void CreateCard()
 {
 	do {
 		_alloc(pUserTemp, user);
+
+		// 输入并检测卡号
 		ScanShort("请输入卡号：", &pUserTemp->uid);
 		if (GetCardById(pUserTemp->uid) != NULL)
 		{
@@ -128,6 +130,8 @@ void CreateCard()
 			continue;
 		}
 		ScanText("请输入持卡人姓名：", pUserTemp->name, 21);
+
+		// 输入并检测余额情况
 		double money;
 		ScanDouble("请输入会员卡余额：", &money);
 		pUserTemp->balance = (int)floor(money * 100 + 0.5);
@@ -138,9 +142,13 @@ void CreateCard()
 			pUserTemp = NULL;
 			continue;
 		}
+
+		// 入队列
 		pUserRear->next = pUserTemp;
 		pUserRear = pUserRear->next;
 		pUserTemp = NULL;
+
+		// 检测是否继续
 	} while (ScanBoolean("是否继续输入？(y/n)："));
 }
 
@@ -156,7 +164,7 @@ user *GetCardById(short uid)
 bool CrashCard()
 {
 	short i;
-	ScanShort("请输入会员卡号:", &i);
+	ScanShort("请输入会员卡号：", &i);
 	pUserTemp = pUserFront;
 	while (pUserTemp->next != NULL && pUserTemp->next->uid != i)
 		pUserTemp = pUserTemp->next;
@@ -212,7 +220,56 @@ bool ChangeVip(short uid) {
 	{
 		ScanText("新名称：", pUserTemp->name, 20);
 	}
+	pUserTemp = NULL;
 	return true;
+}
+
+void PrintVip()
+{
+	short uid;
+	ScanShort("请输入会员卡号：", &uid);
+	pUserTemp = GetCardById(uid);
+	if (pUserTemp == NULL)
+	{
+		printf("没有找到该会员。\n");
+	}
+	else
+	{
+		printf("==================\n");
+		ListVip(pUserTemp);
+		pUserTemp = NULL;
+	}
+}
+
+void ChargeInConsole()
+{
+	short uid;
+	double money;
+	int credit;
+
+	// 输入会员卡号
+	ScanShort("请输入会员卡号：", &uid);
+	pUserTemp = GetCardById(uid);
+	if (pUserTemp == NULL)
+	{
+		printf("用户%04hd不存在！\n", uid);
+		sleep(500);
+		return;
+	}
+
+	// 输入充值金额
+	ScanDouble("请输入充值金额：", &money);
+	if (money <= 0 || money > 1000)
+	{
+		printf("充值失败，请检查您输入的金额。\n");
+		sleep(500);
+	}
+	else
+	{
+		credit = (int)floor(money * 100 + 0.5);
+		if (ChargeToCard(uid, credit, true))
+			printf("充值成功。\n");
+	}
 }
 
 void _user()
@@ -243,26 +300,10 @@ void _user()
 			sleep(500);
 			break;
 		case '5':
-			// 打印单个会员
-			{
-				short i;
-				ScanShort("请输入会员卡号：", &i);
-				pUserTemp = GetCardById(i);
-				if (pUserTemp == NULL)
-				{
-					printf("没有找到该会员。\n");
-				}
-				else
-				{
-					printf("==================\n");
-					ListVip(pUserTemp);
-					pUserTemp = NULL;
-				}
-				pause();
-			}
+			PrintVip();
+			pause();
 			break;
 		case '6':
-			// 打印所有会员
 			ListAllVips();
 			pause();
 			break;
@@ -276,37 +317,12 @@ void _user()
 				op = -52;
 			break;
 		case '2':
-			// 单个卡充值
-			{
-				short j;
-				double m;
-				int n;
-				ScanShort("请输入会员卡号：", &j);
-				pUserTemp = GetCardById(j);
-				if (pUserTemp == NULL)
-				{
-					printf("用户%04hd不存在！\n", j);
-					sleep(500);
-					break;
-				}
-				ScanDouble("请输入充值金额：", &m);
-				if (m <= 0 || m > 1000)
-				{
-					printf("充值失败，请检查您输入的金额。\n");
-					sleep(500);
-				}
-				else
-				{
-					n = (int)floor(m * 100 + 0.5);
-					if (ChargeToCard(j, (int)floor(m * 100 + 0.5), true))
-						printf("充值成功。\n");
-				}
-				sleep(500);
-			}
+			ChargeInConsole();
+			sleep(500);
 			break;
 		case '3':
 			short i1;
-			ScanShort("请输入会员卡号:", &i1);
+			ScanShort("请输入会员卡号：", &i1);
 			ChangeVip(i1);
 			printf("修改结束。\n");
 			sleep(500);

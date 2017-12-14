@@ -76,20 +76,19 @@ void OutputStock()
 		printf("|\n");
 		printf("|  名称：%s\n", warehouse[i].fruitName);
 		printf("|  单位：%s\n", warehouse[i].tagName);
-		printf("|  单价：%d.%02d\n", warehouse[i].singlePrice / 100, warehouse[i].singlePrice % 100);
+		printf("|  单价：￥%d.%02d\n", warehouse[i].singlePrice / 100, warehouse[i].singlePrice % 100);
 		if (warehouse[i].isSingled)
 		{
+			printf("|  一盒：%d个\n", warehouse[i].boxCount);
 			printf("|  剩余：%d\n", warehouse[i].left);
 			printf("|  卖出：%d\n", warehouse[i].sold);
-			printf("|  今销：%d\n", warehouse[i].todayUsage);
-			printf("|  一盒：%d个\n", warehouse[i].boxCount);
 		}
 		else
 		{
 			printf("|  剩余：%.2lf\n", warehouse[i].left / 100.0);
 			printf("|  卖出：%.2lf\n", warehouse[i].sold / 100.0);
-			printf("|  今销：%.2lf\n", warehouse[i].todayUsage / 100.0);
 		}
+		printf("|  今销：￥%d.%02d\n", warehouse[i].todayUsage / 100, warehouse[i].todayUsage % 100);
 		printf("|\n");
 		printf("==================\n");
 	}
@@ -157,23 +156,21 @@ bool ModifyStock()
 
 	// 获取进货数量
 	if (ScanBoolean("是否修改名称？(y/n)："))
-	{
 		ScanText("新名称：", warehouse[id].fruitName, 20);
-	}
+
 	if (ScanBoolean("是否修改单位？(y/n)："))
-	{
 		ScanText("单位名称：", warehouse[id].tagName, 20);
-	}
+	
 	if (ScanBoolean("是否修改单价？(y/n)："))
 	{
 		double p;
 		ScanDouble("新的单价：", &p);
 		warehouse[id].singlePrice = (int) floor(p * 100 + 0.5);
 	}
+
 	if (warehouse[id].isSingled && ScanBoolean("是否修改一盒的个数？(y/n)："))
-	{
 		ScanInt("一盒个数：", &warehouse[id].boxCount);
-	}
+
 	return true;
 }
 
@@ -215,6 +212,8 @@ void _stock()
 			ModifyStock();
 			printf("库存修改完毕\n");
 			sleep(500);
+			break;
+		default:
 			break;
 		}
 

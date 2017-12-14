@@ -34,9 +34,16 @@ bool ListVip(user *current);
 
 /// <summary>列出所有的用户</summary>
 void ListAllVips();
- ///<summary>修改用户信息</summary>
-///<param name="uid" type="Short">用户编号</param>
-bool ChangeVip(short vid);
+
+/// <summary>修改用户信息</summary>
+/// <param name="uid" type="Short">用户编号</param>
+bool ChangeVip(short uid);
+
+/// <summary>控制台打印用户信息</summary>
+void PrintVip();
+
+/// <summary>控制台充值卡金额</summary>
+void ChargeInConsole();
 
 /// <summary>进入用户模块</summary>
 void _user();
