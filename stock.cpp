@@ -104,7 +104,7 @@ bool AddStock()
 		printf("%d.%s ", i + 1, warehouse[i].fruitName);
 	printf("\n");
 	char op;
-	ScanOption("请输入要进货的水果种类：", '1', '5', &op);
+	op = ScanOption("请输入要进货的水果种类：", '1', '5');
 	int id = op - '1';
 	printf("当前水果的单位为：%s。\n", warehouse[id].tagName);
 
@@ -132,8 +132,7 @@ bool ModifyStock()
 	for (int i = 0; i < 5; i++)
 		printf("%d.%s ", i + 1, warehouse[i].fruitName);
 	printf("\n");
-	char op;
-	ScanOption("请输入要修改的水果种类：", '1', '5', &op);
+	char op = ScanOption("请输入要修改的水果种类：", '1', '5');
 	int id = op - '1';
 	printf("==================\n");
 	printf("|\n");
@@ -185,7 +184,7 @@ void _stock()
 		printf("|    4.退出\n");
 		printf("|\n");
 		printf("==================\n");
-		ScanOption("请选择进入：", '1', '4', &op);
+		op = ScanOption("请选择进入：", '1', '4');
 		printf("\n");
 		switch (op)
 		{

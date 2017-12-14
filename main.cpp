@@ -29,7 +29,7 @@ void _main_test()
 	while (1)
 	{
 		printf("1.呵，杨良正  2.呵，杜维康  3.呵，徐英杰  4.呵，宗折翼\n");
-		ScanOption("请选择进入：", '1', '5', &op);
+		op = ScanOption("请选择进入：", '1', '5');
 		switch (op)
 		{
 		case '1':

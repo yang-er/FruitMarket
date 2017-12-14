@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "scan.h"
+#include <ctype.h>
 
 static int scanf_result = 0;
 time_t pTime = 0;
@@ -63,24 +64,30 @@ void ScanText(const char* message, char *buffer, size_t len)
 	scanf_s("%s", buffer, len);
 #endif
 	flush();
+	trim(buffer, len);
 	if (buffer[0] == '\0')
 		ScanText(message, buffer, len);
 }
 
-void ScanOption(const char* message, const char min, const char max, char *c)
+static char chOB[10];
+
+char ScanOption(const char* message, const char min, const char max)
 {
 	printf(message);
+	memset(chOB, 0x00, 10);
 #ifdef _CRT_SECURE_NO_WARNINGS
-	scanf_result = scanf("%c", c);
+	fgets(chOB, 9, stdin);
 #else
-	scanf_result = scanf_s("%c", c);
+	gets_s(chOB, 9);
 #endif
 	flush();
-	if (scanf_result != 1 || *c > max || *c < min)
+	trim(chOB, 10);
+	if (strlen(chOB) != 1 || chOB[0] < min || chOB[0] > max)
 	{
-		printf("输入格式有误！请检查大小写和前后空格。\n");
-		ScanOption(message, min, max, c);
+		printf("输入格式有误！请检查大小写和前后字符。\n");
+		return ScanOption(message, min, max);
 	}
+	return chOB[0];
 }
 
 #define isTrue(c) ((c=='y')||(c=='Y'))
@@ -89,21 +96,22 @@ void ScanOption(const char* message, const char min, const char max, char *c)
 bool ScanBoolean(const char* message)
 {
 	printf(message);
-	char c;
+	memset(chOB, 0x00, 10);
 #ifdef _CRT_SECURE_NO_WARNINGS
-	scanf_result = scanf("%c", &c);
+	fgets(chOB, 9, stdin);
 #else
-	scanf_result = scanf_s("%c", &c);
+	gets_s(chOptionBuffer, 9);
 #endif
 	flush();
-	if (scanf_result != 1 || !(isTrue(c) ^ isFalse(c)))
+	trim(chOB, 10);
+	if (strlen(chOB) != 1 || !(isTrue(chOB[0]) ^ isFalse(chOB[0])))
 	{
 		printf("输入格式有误！请检查是否为y/Y/n/N。\n");
 		return ScanBoolean(message);
 	}
 	else
 	{
-		return isTrue(c);
+		return isTrue(chOB[0]);
 	}
 }
 
@@ -198,4 +206,33 @@ void SetCurrentDate()
 	{
 		pTime = mktime(pCurrentDate);
 	}
+}
+
+void trim(char *buf, size_t len)
+{
+	// 新建缓冲区
+	char *tmp = (char*) malloc(len), *head = tmp, *tail = tmp;
+	memcpy(tmp, buf, len);
+
+	// 从头消除无用字符
+	if (*head && isspace(*head)) *head++ = '\0';
+
+	// 检测字符串是否剩余
+	if (*head == '\0')
+	{
+		memset(buf, 0x00, len);
+		memset(tmp, 0x00, len);
+		free(tmp);
+		return;
+	}
+
+	// 从尾部消除无用字符
+	tail = head + strlen(head) - 1;
+	if (isspace(*tail)) *tail-- = '\0';
+
+	// 返回最终的字符串
+	memset(buf, 0x00, len);
+	memcpy(buf, head, tail - head + 1);
+	memset(tmp, 0x00, len);
+	free(tmp);
 }

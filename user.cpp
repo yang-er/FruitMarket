@@ -227,7 +227,7 @@ void _user()
 		printf("|   7.退出\n");
 		printf("|\n");
 		printf("==================\n");
-		ScanOption("请选择进入：", '1', '7', &op);
+		op = ScanOption("请选择进入：", '1', '7');
 		printf("\n");
 		switch (op)
 		{

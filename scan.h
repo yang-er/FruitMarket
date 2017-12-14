@@ -80,8 +80,7 @@ void ScanText(const char* message, char *buffer, size_t len);
 /// <param name="message" type="String">显示的消息</param>
 /// <param name="min" type="Char">选项中ASCII最小的字符</param>
 /// <param name="max" type="Char">选项中ASCII最大的字符</param>
-/// <param name="c" type="Char">要扫描的变量地址</param>
-void ScanOption(const char* message, const char min, const char max, char *c);
+char ScanOption(const char* message, const char min, const char max);
 
 /// <summary>扫描是 / 否选项</summary>
 /// <param name="message" type="String">显示的消息</param>
@@ -106,3 +105,8 @@ void SetCurrentDate();
 
 /// <summary>进入第二天</summary>
 void PushDate();
+
+/// <summary>左右清除空格</summary>
+/// <param name="buf" type="String">原字符串</param>
+/// <param name="len" type="Integer">缓冲区长度</param>
+void trim(char *buf, size_t len);
