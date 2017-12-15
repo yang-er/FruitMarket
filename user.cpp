@@ -133,8 +133,8 @@ void CreateCard()
 
 		// 输入并检测余额情况
 		double money;
-		ScanDouble("请输入会员卡余额：", &money);
-		pUserTemp->balance = (int)floor(money * 100 + 0.5);
+		ScanDouble("请输入会员卡余额：￥", &money);
+		pUserTemp->balance = cent(money);
 		if (pUserTemp->balance > 1000000 || pUserTemp->balance < 0)
 		{
 			printf("余额超过限制，建卡失败。\n");
@@ -189,8 +189,8 @@ bool ListVip(user* current)
 	printf("|\n");
 	printf("|  姓名：%s\n", current->name);
 	printf("|  卡号：%04hd\n", current->uid);
-	printf("|  余额：%d.%02d\n", current->balance / 100, current->balance % 100);
-	printf("|  已用：%d.%02d\n", current->todayUsage / 100, current->todayUsage % 100);
+	printf("|  余额：￥%.2lf\n", dollar(current->balance));
+	printf("|  已用：￥%.2lf\n", dollar(current->todayUsage));
 	printf("|\n");
 	printf("==================\n");
 	return false;
@@ -266,7 +266,7 @@ void ChargeInConsole()
 	}
 	else
 	{
-		credit = (int)floor(money * 100 + 0.5);
+		credit = cent(money);
 		if (ChargeToCard(uid, credit, true))
 			printf("充值成功。\n");
 	}

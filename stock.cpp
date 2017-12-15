@@ -76,7 +76,7 @@ void OutputStock()
 		printf("|\n");
 		printf("|  名称：%s\n", warehouse[i].fruitName);
 		printf("|  单位：%s\n", warehouse[i].tagName);
-		printf("|  单价：￥%d.%02d\n", warehouse[i].singlePrice / 100, warehouse[i].singlePrice % 100);
+		printf("|  单价：￥%.2lf\n", dollar(warehouse[i].singlePrice));
 		if (warehouse[i].isSingled)
 		{
 			printf("|  一盒：%d个\n", warehouse[i].boxCount);
@@ -85,10 +85,10 @@ void OutputStock()
 		}
 		else
 		{
-			printf("|  剩余：%.2lf\n", warehouse[i].left / 100.0);
-			printf("|  卖出：%.2lf\n", warehouse[i].sold / 100.0);
+			printf("|  剩余：%.2lf\n", dollar(warehouse[i].left));
+			printf("|  卖出：%.2lf\n", dollar(warehouse[i].sold));
 		}
-		printf("|  今销：￥%d.%02d\n", warehouse[i].todayUsage / 100, warehouse[i].todayUsage % 100);
+		printf("|  今销：￥%.2lf\n", dollar(warehouse[i].todayUsage));
 		printf("|\n");
 		printf("==================\n");
 	}
@@ -113,17 +113,17 @@ bool AddStock()
 		int count;
 		ScanInt("请输入要增加的数量：", &count);
 		warehouse[id].left += count;
-		if (warehouse[id].left > 100 || warehouse[id].left <= 0)
+		if (warehouse[id].left > 1000 || warehouse[id].left <= 0)
 		{
-			printf("爆仓了。自动将库存减到100。\n");
-			warehouse[id].left = 100;
+			printf("爆仓了。自动将库存减到1000。\n");
+			warehouse[id].left = 1000;
 		}
 	}
 	else
 	{
 		double count;
 		ScanDouble("请输入要增加的数量：", &count);
-		warehouse[id].left += (int)ceil(count * 100);
+		warehouse[id].left += cent(count);
 		if (warehouse[id].left > 10000 || warehouse[id].left <= 0)
 		{
 			printf("爆仓了。自动将库存减到100。\n");
@@ -147,7 +147,7 @@ bool ModifyStock()
 	printf("|\n");
 	printf("|  名称：%s\n", warehouse[id].fruitName);
 	printf("|  单位：%s\n", warehouse[id].tagName);
-	printf("|  单价：%d.%02d\n", warehouse[id].singlePrice / 100, warehouse[id].singlePrice % 100);
+	printf("|  单价：￥%.2lf\n", dollar(warehouse[id].singlePrice));
 	if (warehouse[id].isSingled)
 		printf("|  一盒：%d个\n", warehouse[id].sold);
 	printf("|\n");
@@ -165,7 +165,7 @@ bool ModifyStock()
 	{
 		double p;
 		ScanDouble("新的单价：", &p);
-		warehouse[id].singlePrice = (int) floor(p * 100 + 0.5);
+		warehouse[id].singlePrice = cent(p);
 	}
 
 	if (warehouse[id].isSingled && ScanBoolean("是否修改一盒的个数？(y/n)："))

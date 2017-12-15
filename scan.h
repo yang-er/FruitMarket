@@ -34,6 +34,9 @@
 	flush(); \
 }
 
+#define cent(d) (int)floor(d*100+0.5)
+#define dollar(c) c/100.0
+
 #ifdef WINVER
 	// ÇåÆÁÄ»
 	#define clear() system("cls")
