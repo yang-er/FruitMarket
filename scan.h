@@ -15,27 +15,27 @@
 #define file_exists(p) (_access(p, 0) != EOF)
 
 // 申请内存并清零
-#define _alloc(p,T) { \
+#define _alloc(p,T) do { \
 	p = (T*) malloc(sizeof(T)); \
 	memset(p, 0x00, sizeof(T)); \
-}
+} while (false)
 
 // 清零并释放内存
-#define _free(p,T) { \
+#define _free(p,T) do { \
 	memset(p, 0x00, sizeof(T)); \
 	free(p); \
-}
+} while (false)
 
 // 按任意键继续
-#define pause() { \
+#define pause() do { \
 	printf("\n请按任意键继续. . . "); \
 	flush(); \
 	getchar(); \
 	flush(); \
-}
+} while (false)
 
-#define cent(d) (int)floor(d*100+0.5)
-#define dollar(c) c/100.0
+#define cent(d) ((int)floor((d)*100+0.5))
+#define dollar(c) ((c)/100.0)
 
 #ifdef WINVER
 	// 清屏幕
@@ -49,11 +49,11 @@
 	// 清屏幕
 	#define clear() system("clear")
 	// 暂停a毫秒
-	#define sleep(a) usleep(a*1000)
+	#define sleep(a) usleep((a)*1000)
 #endif
 
 // 交换数值类型a和b的值
-#define swap(a,b) a^=b^=a^=b
+#define swap(a,b) (a)^=(b)^=(a)^=(b)
 
 extern time_t pTime;
 extern struct tm *pCurrentDate;
