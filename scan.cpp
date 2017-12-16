@@ -7,85 +7,88 @@ struct tm *pCurrentDate = NULL;
 
 void ScanShort(const char* message, short *i)
 {
-	printf(message);
+	do {
+		printf(message);
 #ifdef _CRT_SECURE_NO_WARNINGS
-	scanf_result = scanf("%hd", i);
+		scanf_result = scanf("%hd", i);
 #else
-	scanf_result = scanf_s("%hd", i);
+		scanf_result = scanf_s("%hd", i);
 #endif
-	flush();
-	if (scanf_result != 1 || *i < 1 || *i > 9999)
-	{
-		printf("输入格式有误！请确认数字是否在0001-9999的范围内。\n");
-		ScanShort(message, i);
-	}
+		flush();
+	} while (
+		(scanf_result != 1 || *i < 1 || *i > 9999) // 检测是否输入成功
+		&& printf("输入格式有误！请确认数字是否在0001-9999的范围内。\n") // 不成功时输出错误提示
+	);
 }
 
 void ScanInt(const char* message, int *i)
 {
-	printf(message);
+	do {
+		printf(message);
 #ifdef _CRT_SECURE_NO_WARNINGS
-	scanf_result = scanf("%d", i);
+		scanf_result = scanf("%d", i);
 #else
-	scanf_result = scanf_s("%d", i);
+		scanf_result = scanf_s("%d", i);
 #endif
-	flush();
-	if (scanf_result != 1)
-	{
-		printf("输入格式有误！无法识别为整数。\n");
-		ScanInt(message, i);
-	}
+		flush();
+	} while (
+		(scanf_result != 1) // 检测是否输入成功
+		&& printf("输入格式有误！无法识别为整数。\n") // 不成功时输出错误提示
+	);
 }
 
 void ScanDouble(const char* message, double *i)
 {
-	printf(message);
+	do {
+		printf(message);
 #ifdef _CRT_SECURE_NO_WARNINGS
-	scanf_result = scanf("%lf", i);
+		scanf_result = scanf("%lf", i);
 #else
-	scanf_result = scanf_s("%lf", i);
+		scanf_result = scanf_s("%lf", i);
 #endif
-	flush();
-	if (scanf_result != 1)
-	{
-		printf("输入格式有误！无法识别为浮点。\n");
-		ScanDouble(message, i);
-	}
+		flush();
+	} while (
+		(scanf_result != 1) // 检测是否输入成功
+		&& printf("输入格式有误！无法识别为浮点。\n") // 不成功时输出错误提示
+	);
 }
 
 void ScanText(const char* message, char *buffer, size_t len)
 {
-	memset(buffer, 0x00, sizeof(char) * len);
-	printf(message);
+	do {
+		memset(buffer, 0x00, sizeof(char) * len);
+		printf(message);
 #ifdef _CRT_SECURE_NO_WARNINGS
-	scanf("%20s", buffer);
+		scanf("%20s", buffer);
 #else
-	scanf_s("%s", buffer, len);
+		scanf_s("%s", buffer, len);
 #endif
-	flush();
-	// trim(buffer, len);
-	if (buffer[0] == '\0')
-		ScanText(message, buffer, len);
+		flush();
+		// trim(buffer, len);
+	} while (
+		(buffer[0] == '\0') // 检测是否输入成功
+		&& printf("输出字符串不能为空！\n") // 不成功时输出错误提示
+	);
 }
 
 static char chOB[10];
 
 char ScanOption(const char* message, const char min, const char max)
 {
-	printf(message);
-	memset(chOB, 0x00, 10);
+	do {
+		printf(message);
+		memset(chOB, 0x00, 10);
 #ifdef _CRT_SECURE_NO_WARNINGS
-	fgets(chOB, 9, stdin);
+		fgets(chOB, 9, stdin);
 #else
-	gets_s(chOB, 9);
+		gets_s(chOB, 9);
 #endif
-	flush();
-	trim(chOB, 10);
-	if (strlen(chOB) != 1 || chOB[0] < min || chOB[0] > max)
-	{
-		printf("输入格式有误！请检查大小写和前后字符。\n");
-		return ScanOption(message, min, max);
-	}
+		flush();
+		trim(chOB, 10);
+	} while (
+		(strlen(chOB) != 1 || chOB[0] < min || chOB[0] > max) // 检测是否输入成功
+		&& printf("输入格式有误！请检查大小写和前后字符。\n") // 不成功时输出错误提示
+	);
 	return chOB[0];
 }
 
@@ -94,24 +97,21 @@ char ScanOption(const char* message, const char min, const char max)
 
 bool ScanBoolean(const char* message)
 {
-	printf(message);
-	memset(chOB, 0x00, 10);
+	do {
+		printf(message);
+		memset(chOB, 0x00, 10);
 #ifdef _CRT_SECURE_NO_WARNINGS
-	fgets(chOB, 9, stdin);
+		fgets(chOB, 9, stdin);
 #else
-	gets_s(chOptionBuffer, 9);
+		gets_s(chOptionBuffer, 9);
 #endif
-	flush();
-	trim(chOB, 10);
-	if (strlen(chOB) != 1 || !(isTrue(chOB[0]) ^ isFalse(chOB[0])))
-	{
-		printf("输入格式有误！请检查是否为y/Y/n/N。\n");
-		return ScanBoolean(message);
-	}
-	else
-	{
-		return isTrue(chOB[0]);
-	}
+		flush();
+		trim(chOB, 10);
+	} while (
+		(strlen(chOB) != 1 || !(isTrue(chOB[0]) ^ isFalse(chOB[0]))) // 检测是否输入成功
+		&& printf("输入格式有误！请检查是否为y/Y/n/N。\n") // 不成功时输出错误提示
+	);
+	return isTrue(chOB[0]);
 }
 
 void CheckFile(FILE* pFile, const char* pszName)
@@ -132,8 +132,7 @@ void DataNotFulfilled(FILE* pFile, const char* pszName)
 time_t ScanTime(const char* message)
 {
 	int dHour, dMinute;
-	while (true)
-	{
+	do {
 		printf(message);
 #ifdef _CRT_SECURE_NO_WARNINGS
 		scanf_result = scanf("%d:%d", &dHour, &dMinute);
@@ -141,14 +140,10 @@ time_t ScanTime(const char* message)
 		scanf_result = scanf_s("%d:%d", &dHour, &dMinute);
 #endif
 		flush();
-		if (scanf_result != 2 ||
-			dHour > 23 || dHour < 0 || dMinute > 59 || dMinute < 0)
-		{
-			printf("输入时间格式有误！格式：HH:MM，如23:59。\n");
-			continue;
-		}
-		break;
-	}
+	} while (
+		(scanf_result != 2 || dHour > 23 || dHour < 0 || dMinute > 59 || dMinute < 0) // 检测是否输入成功
+		&& printf("输入时间格式有误！格式：HH:MM，如23:59。\n") // 不成功时输出错误提示
+	);
 	return pTime + dMinute * 60 + dHour * 3600;
 }
 
@@ -168,8 +163,7 @@ void SetCurrentDate()
 	// 是否使用当前时间
 	if (!ScanBoolean("是否使用当前日期？(y/n)："))
 	{
-		while (true)
-		{
+		do {
 			flush();
 			printf("请输入当前日期(YYYY-MM-DD)：");
 #ifdef _CRT_SECURE_NO_WARNINGS
@@ -187,13 +181,10 @@ void SetCurrentDate()
 			pCurrentDate->tm_mon -= 1;
 			
 			pTime = mktime(pCurrentDate);
-			if (pTime == -1)
-			{
-				printf("输入内容无法被识别！\n");
-				continue;
-			}
-			break;
-		}
+		} while (
+			(pTime == -1) // 检测是否输入成功
+			&& printf("输入内容无法被识别！\n") // 不成功时输出错误提示
+		);
 
 		// 再次输出时间
 		printf("程序日期：%d年%d月%d日。\n",
