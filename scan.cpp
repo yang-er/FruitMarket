@@ -58,12 +58,12 @@ void ScanText(const char* message, char *buffer, size_t len)
 	memset(buffer, 0x00, sizeof(char) * len);
 	printf(message);
 #ifdef _CRT_SECURE_NO_WARNINGS
-	scanf("%s", buffer);
+	scanf("%20s", buffer);
 #else
 	scanf_s("%s", buffer, len);
 #endif
 	flush();
-	trim(buffer, len);
+	// trim(buffer, len);
 	if (buffer[0] == '\0')
 		ScanText(message, buffer, len);
 }

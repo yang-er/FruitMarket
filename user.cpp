@@ -218,7 +218,7 @@ bool ChangeVip(short uid) {
 	}
 	if (ScanBoolean("是否修改会员姓名？(y/n)："))
 	{
-		ScanText("新名称：", pUserTemp->name, 20);
+		ScanText("新名称：", pUserTemp->name, 21);
 	}
 	pUserTemp = NULL;
 	return true;

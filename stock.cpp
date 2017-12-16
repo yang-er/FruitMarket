@@ -156,10 +156,10 @@ bool ModifyStock()
 
 	// 获取进货数量
 	if (ScanBoolean("是否修改名称？(y/n)："))
-		ScanText("新名称：", warehouse[id].fruitName, 20);
+		ScanText("新名称：", warehouse[id].fruitName, 21);
 
 	if (ScanBoolean("是否修改单位？(y/n)："))
-		ScanText("单位名称：", warehouse[id].tagName, 20);
+		ScanText("单位名称：", warehouse[id].tagName, 21);
 	
 	if (ScanBoolean("是否修改单价？(y/n)："))
 	{
