@@ -35,3 +35,6 @@ bool ModifyTicket(short tid);
 /// <summary>É¾³ýÐ¡Æ±</summary>
 /// <param name="tid" type="Short">ÒªÉ¾³ýµÄÐ¡Æ±±àºÅ</param>
 bool DeleteTicket(short tid);
+
+ticket *GetCardBytid(short tid);
+void printticket();
