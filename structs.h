@@ -13,9 +13,6 @@ typedef struct ticket {
 	/// <summary>水果购买数量（与warehouse对应）</summary>
 	int amount[5];
 
-	/// <summary>水果购买种类（与warehouse对应）</summary>
-	int fruit;
-
 	/// <summary>水果购买金额（与warehouse对应）</summary>
 	int credit[5];
 

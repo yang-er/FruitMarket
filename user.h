@@ -1,5 +1,4 @@
 #pragma once
-#include "stdafx.h"
 #include "structs.h"
 
 extern user *pUserFront;
@@ -43,7 +42,8 @@ bool ChangeVip(short uid);
 void PrintVip();
 
 /// <summary>控制台充值卡金额</summary>
-void ChargeInConsole();
+/// <param name="uid" type="Short">用户编号（-2为输入）</param>
+void ChargeInConsole(short uid);
 
 /// <summary>进入用户模块</summary>
 void _user();

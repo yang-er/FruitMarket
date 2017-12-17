@@ -1,8 +1,7 @@
 #include "stdafx.h"
-#include "scan.h"
-#include "math.h"
-#include "user.h"
 #include "structs.h"
+#include "scan.h"
+#include "user.h"
 
 user *pUserFront = NULL;
 user *pUserRear = NULL;
@@ -241,20 +240,22 @@ void PrintVip()
 	}
 }
 
-void ChargeInConsole()
+void ChargeInConsole(short uid)
 {
-	short uid;
 	double money;
 	int credit;
 
-	// 输入会员卡号
-	ScanShort("请输入会员卡号：", &uid);
-	pUserTemp = GetCardById(uid);
-	if (pUserTemp == NULL)
+	if (uid == -2)
 	{
-		printf("用户%04hd不存在！\n", uid);
-		sleep(500);
-		return;
+		// 输入会员卡号
+		ScanShort("请输入会员卡号：", &uid);
+		pUserTemp = GetCardById(uid);
+		if (pUserTemp == NULL)
+		{
+			printf("用户%04hd不存在！\n", uid);
+			sleep(500);
+			return;
+		}
 	}
 
 	// 输入充值金额
@@ -317,7 +318,7 @@ void _user()
 				op = -52;
 			break;
 		case '2':
-			ChargeInConsole();
+			ChargeInConsole(-2);
 			sleep(500);
 			break;
 		case '3':

@@ -16,7 +16,7 @@ bool AddTicket();
 
 /// <summary>输出一张小票的信息</summary>
 /// <param name="ticket" type="Ticket">要输出的小票</param>
-void OutputTicket(ticket* ticket);
+void OutputTicket(ticket* ticket, bool isFull);
 
 /// <summary>检查文件是否打开成功</summary>
 /// <param name="pFile" type="File">要检查的文件指针</param>
@@ -35,6 +35,3 @@ bool ModifyTicket(short tid);
 /// <summary>删除小票</summary>
 /// <param name="tid" type="Short">要删除的小票编号</param>
 bool DeleteTicket(short tid);
-
-ticket *GetCardBytid(short tid);
-void printticket();

@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "structs.h"
 #include "scan.h"
-#include "math.h"
 #include "stock.h"
 
 const char* pfStock = "stock.dat";

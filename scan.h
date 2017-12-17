@@ -1,5 +1,6 @@
 #pragma once
 #include <time.h>
+#include <math.h>
 #include <sys/stat.h>
 
 #ifdef __cplusplus
