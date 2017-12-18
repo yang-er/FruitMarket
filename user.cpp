@@ -120,7 +120,7 @@ void CreateCard()
 		_alloc(pUserTemp, user);
 
 		// 输入并检测卡号
-		ScanShort("请输入卡号：", &pUserTemp->uid);
+		ScanShort("请输入卡号：", &pUserTemp->uid, false);
 		if (GetCardById(pUserTemp->uid) != NULL)
 		{
 			printf("会员卡%04d已存在！\n", pUserTemp->uid);
@@ -163,7 +163,7 @@ user *GetCardById(short uid)
 bool CrashCard()
 {
 	short i;
-	ScanShort("请输入会员卡号：", &i);
+	ScanShort("请输入会员卡号：", &i, false);
 	pUserTemp = pUserFront;
 	while (pUserTemp->next != NULL && pUserTemp->next->uid != i)
 		pUserTemp = pUserTemp->next;
@@ -226,7 +226,7 @@ bool ChangeVip(short uid) {
 void PrintVip()
 {
 	short uid;
-	ScanShort("请输入会员卡号：", &uid);
+	ScanShort("请输入会员卡号：", &uid, true);
 	pUserTemp = GetCardById(uid);
 	if (pUserTemp == NULL)
 	{
@@ -248,7 +248,7 @@ void ChargeInConsole(short uid)
 	if (uid == -2)
 	{
 		// 输入会员卡号
-		ScanShort("请输入会员卡号：", &uid);
+		ScanShort("请输入会员卡号：", &uid, false);
 		pUserTemp = GetCardById(uid);
 		if (pUserTemp == NULL)
 		{
@@ -323,7 +323,7 @@ void _user()
 			break;
 		case '3':
 			short i1;
-			ScanShort("请输入会员卡号：", &i1);
+			ScanShort("请输入会员卡号：", &i1, false);
 			ChangeVip(i1);
 			printf("修改结束。\n");
 			sleep(500);

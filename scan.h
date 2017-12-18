@@ -62,7 +62,8 @@ extern struct tm *pCurrentDate;
 /// <summary>读取一个0001-9999的数字</summary>
 /// <param name="message" type="String">显示的消息</param>
 /// <param name="i" type="Short">要扫描的变量地址</param>
-void ScanShort(const char* message, short *i);
+/// <param name="canFF" type="Boolean">是否可以输入-1</param>
+void ScanShort(const char* message, short *i, bool canFF);
 
 /// <summary>读取一个32位整数</summary>
 /// <param name="message" type="String">显示的消息</param>

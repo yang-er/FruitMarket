@@ -37,7 +37,7 @@ bool AddTicket()
 		// 确定小票编号
 		bool bFlag = true;
 		do {
-			ScanShort("请输入序号：", &pTicketTemp->tid);
+			ScanShort("请输入序号：", &pTicketTemp->tid, false);
 			bFlag = FindTicket(pTicketTemp->tid) != NULL;
 			if (bFlag) printf("小票%04d已存在！\n", pTicketTemp->tid);
 			if (bFlag && !ScanBoolean("是否更换号码？(y/n)："))
@@ -52,7 +52,9 @@ bool AddTicket()
 
 		// 确定购买数量和总金额
 		printf("以下不够买请输入0。");
-		double c = 0, int d = 0, int sum = 0, char msg[38];
+		double c = 0;
+		int d = 0, sum = 0;
+		char msg[38];
 
 		for (int i = 0; i < 5; i++)
 		{
@@ -78,7 +80,7 @@ bool AddTicket()
 
 			// 会员卡 or 现金
 			do {
-				ScanShort("请输入会员卡号（现金为-1）：", &pTicketTemp->vipCard);
+				ScanShort("请输入会员卡号（现金为-1）：", &pTicketTemp->vipCard, true);
 			} while (GetCardById(pTicketTemp->vipCard) == NULL && printf("没有找到该会员。\n"));
 
 			if (pTicketTemp->vipCard == -1)
@@ -165,8 +167,8 @@ void OutputTicket(ticket* ticket, bool isFull)
 	printf("|                                            |\n");
 	printf("|  付款人：%10s  付款卡：%04d          |\n", "", 0);
 	printf("|  付款方式：%6s    票据编号：%04d        |\n", "会员卡", 0);
-	time_t calc = ticket->time - pTime;
-	printf("|  订购时间：%04d年%-2d月%-2d日 %-2ld:%02ld            |\n", 
+	int calc = int(ticket->time - pTime);
+	printf("|  订购时间：%04d年%-2d月%-2d日 %-2d:%02d            |\n", 
 		pCurrentDate->tm_year + 1900, pCurrentDate->tm_mon + 1, pCurrentDate->tm_mday, calc / 3600, calc / 60 % 60);
 	printf("|--------------------------------------------|\n");
 	printf("|  # 商品名           单价    数量     金额  |\n");
@@ -184,7 +186,7 @@ void OutputTicket(ticket* ticket, bool isFull)
 	printf("|--------------------------------------------|\n");
 	printf("|  合计                            %-8.2lf  |\n", dollar(sum));
 	printf("|                                            |\n");
-	printf("|  收款：%8.2lf      找零：%8.2lf        |\n", pTicketTemp->given, pTicketTemp->left);
+	printf("|  收款：%8.2lf      找零：%8.2lf        |\n", dollar(pTicketTemp->given), dollar(pTicketTemp->left));
 	printf("|                                            |\n");
 	if (isFull)
 	{
@@ -264,7 +266,7 @@ void _ticket_test()
 			break;
 		case '2':
 			short tid;
-			ScanShort("请输入购物单号：", &tid);
+			ScanShort("请输入购物单号：", &tid, false);
 			pTicketTemp = FindTicket(tid);
 			if (pTicketTemp == NULL)
 			{
