@@ -163,17 +163,18 @@ static void addOne()
 	char msg[70];
 	for (int i = 0; i < 5; i++)
 	{
-		sprintf(msg, "请输入%s购买数量（%.2lf元/%s，剩余%.2lf）：",
-			warehouse[i].fruitName, dollar(warehouse[i].singlePrice), warehouse[i].tagName,
-			warehouse[i].isSingled ? (warehouse[i].left * 1.0) : dollar(warehouse[i].left));
 		if (warehouse[i].isSingled)
 		{
+			sprintf(msg, "请输入%s购买数量（%.2lf元/%s，剩余%d，一盒%d个）：",
+				warehouse[i].fruitName, dollar(warehouse[i].singlePrice), warehouse[i].tagName, warehouse[i].left, warehouse[i].boxCount);
 			do { ScanInt(msg, &d); } while ((d < 0 || d > warehouse[i].left) && printf("购买数量不合法！\n"));
 			pTicketTemp->amount[i] = d;
 			pTicketTemp->credit[i] = d * warehouse[i].singlePrice;
 		}
 		else
 		{
+			sprintf(msg, "请输入%s购买数量（%.2lf元/%s，剩余%.2lf）：",
+				warehouse[i].fruitName, dollar(warehouse[i].singlePrice), warehouse[i].tagName, dollar(warehouse[i].left));
 			do { ScanDouble(msg, &c); } while ((c < 0 || c > dollar(warehouse[i].left)) && printf("购买数量不合法！\n"));
 			pTicketTemp->amount[i] = cent(c);
 			pTicketTemp->credit[i] = int(c * warehouse[i].singlePrice);
