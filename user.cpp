@@ -47,8 +47,6 @@ void LoadUserFromFile()
 	{
 		_alloc(pUserTemp, user);
 		fread(pUserTemp, sizeof(user), 1, pFile);
-		if (*((char*)pUserTemp) == -1)
-			printf("gg");
 		if (pUserFront == NULL) pUserFront = pUserTemp;
 		if (pUserRear != NULL) pUserRear->next = pUserTemp;
 		pUserRear = pUserTemp;
@@ -132,7 +130,7 @@ void CreateCard()
 
 		// 输入并检测余额情况
 		double money;
-		ScanDouble("请输入会员卡余额：￥", &money);
+		ScanDouble("请输入会员卡余额：", &money);
 		pUserTemp->balance = cent(money);
 		if (pUserTemp->balance > 1000000 || pUserTemp->balance < 0)
 		{
@@ -188,8 +186,8 @@ bool ListVip(user* current)
 	printf("|\n");
 	printf("|  姓名：%s\n", current->name);
 	printf("|  卡号：%04hd\n", current->uid);
-	printf("|  余额：￥%.2lf\n", dollar(current->balance));
-	printf("|  已用：￥%.2lf\n", dollar(current->todayUsage));
+	printf("|  余额：%.2lf\n", dollar(current->balance));
+	printf("|  已用：%.2lf\n", dollar(current->todayUsage));
 	printf("|\n");
 	printf("==================\n");
 	return false;
@@ -273,9 +271,8 @@ void ChargeInConsole(short uid)
 	}
 }
 
-void _user()
+void menu_user()
 {
-	clear();
 	char op;
 	while (true)
 	{
@@ -296,40 +293,14 @@ void _user()
 		printf("\n");
 		switch (op)
 		{
-		case '1':
-			CreateCard();
-			sleep(500);
-			break;
-		case '5':
-			PrintVip();
-			pause();
-			break;
-		case '6':
-			ListAllVips();
-			pause();
-			break;
-		case '4':
-			if(CrashCard())
-				printf("删除卡成功。\n");
-			sleep(500);
-			break;
-		case '7':
-			if (ScanBoolean("确定退出嘛(y/n)："))
-				op = -52;
-			break;
-		case '2':
-			ChargeInConsole(-2);
-			sleep(500);
-			break;
-		case '3':
-			short i1;
-			ScanShort("请输入会员卡号：", &i1, false);
-			ChangeVip(i1);
-			printf("修改结束。\n");
-			sleep(500);
-			break;
-		default:
-			break;
+		case '1': CreateCard(); break;
+		case '2': ChargeInConsole(-2); break;
+		case '3': short i1; ScanShort("请输入会员卡号：", &i1, false); ChangeVip(i1); printf("修改结束。\n"); break;
+		case '4': if(CrashCard()) printf("删除卡成功。\n"); break;
+		case '5': PrintVip(); pause(); break;
+		case '6': ListAllVips(); pause(); break;
+		case '7': if (ScanBoolean("确定退出嘛(y/n)：")) op = -52; break;
+		default: break;
 		}
 		if (op == -52)
 		{
@@ -339,6 +310,7 @@ void _user()
 			clear();
 			break;
 		}
+		sleep(500);
 		clear();
 	}
 }

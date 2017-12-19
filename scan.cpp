@@ -12,7 +12,7 @@ void ScanShort(const char* message, short *i, bool canFF)
 		scanf_result = scanf("%hd", i);
 		flush();
 	} while (
-		(scanf_result != 1 || *i < 1 || *i > 9999 || (canFF && *i == -1)) // 检测是否输入成功
+		(scanf_result != 1 || ((*i < 1 || *i > 9999) && !(canFF && *i == -1))) // 检测是否输入成功
 		&& printf("输入格式有误！请确认数字是否在0001-9999的范围内。\n") // 不成功时输出错误提示
 	);
 }

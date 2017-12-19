@@ -40,4 +40,4 @@ bool DeleteTicket(short tid);
 void ExportTickets();
 
 /// <summary>进入小票模块</summary>
-void _ticket();
+void menu_ticket();

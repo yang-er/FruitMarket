@@ -6,7 +6,6 @@
 const char* pfStock = "stock.dat";
 stock warehouse[5];
 
-/// <summary>从文件中加载库存信息</summary>
 bool LoadStockFromFile()
 {
 	FILE *pFile;
@@ -45,7 +44,6 @@ bool LoadStockFromFile()
 	return true;
 }
 
-/// <summary>将水果库存信息保存到文件</summary>
 bool SaveStockToFile()
 {
 	FILE *pFile;
@@ -64,7 +62,6 @@ bool SaveStockToFile()
 	return true;
 }
 
-/// <summary>输出所有水果的库存</summary>
 void OutputStock()
 {
 	printf("==================\n");
@@ -75,7 +72,7 @@ void OutputStock()
 		printf("|\n");
 		printf("|  名称：%s\n", warehouse[i].fruitName);
 		printf("|  单位：%s\n", warehouse[i].tagName);
-		printf("|  单价：￥%.2lf\n", dollar(warehouse[i].singlePrice));
+		printf("|  单价：%.2lf\n", dollar(warehouse[i].singlePrice));
 		if (warehouse[i].isSingled)
 		{
 			printf("|  一盒：%d个\n", warehouse[i].boxCount);
@@ -87,13 +84,12 @@ void OutputStock()
 			printf("|  剩余：%.2lf\n", dollar(warehouse[i].left));
 			printf("|  卖出：%.2lf\n", dollar(warehouse[i].sold));
 		}
-		printf("|  今销：￥%.2lf\n", dollar(warehouse[i].todayUsage));
+		printf("|  已卖出：￥%.2lf\n", dollar(warehouse[i].todayUsage));
 		printf("|\n");
 		printf("==================\n");
 	}
 }
 
-/// <summary>增加某一水果的库存</summary>
 bool AddStock()
 {
 	// 明确要操作的水果
@@ -132,7 +128,6 @@ bool AddStock()
 	return true;
 }
 
-/// <summary>修改某一水果的属性</summary>
 bool ModifyStock()
 {
 	// 明确要操作的水果
@@ -146,7 +141,7 @@ bool ModifyStock()
 	printf("|\n");
 	printf("|  名称：%s\n", warehouse[id].fruitName);
 	printf("|  单位：%s\n", warehouse[id].tagName);
-	printf("|  单价：￥%.2lf\n", dollar(warehouse[id].singlePrice));
+	printf("|  单价：%.2lf\n", dollar(warehouse[id].singlePrice));
 	if (warehouse[id].isSingled)
 		printf("|  一盒：%d个\n", warehouse[id].sold);
 	printf("|\n");
@@ -173,8 +168,7 @@ bool ModifyStock()
 	return true;
 }
 
-/// <summary>进入仓库模式</summary>
-void _stock()
+void menu_stock()
 {
 	clear();
 	char op;
@@ -194,26 +188,11 @@ void _stock()
 		printf("\n");
 		switch (op)
 		{
-		case '1':
-			OutputStock();
-			pause();
-			break;
-		case '2':
-			AddStock();
-			printf("添加完毕\n");
-			sleep(500);
-			break;
-		case '4':
-			if (ScanBoolean("确定退出嘛(y/n)："))
-				op = -52;
-			break;
-		case '3':
-			ModifyStock();
-			printf("库存修改完毕\n");
-			sleep(500);
-			break;
-		default:
-			break;
+		case '1': OutputStock(); pause(); break;
+		case '2': AddStock(); printf("添加完毕\n"); break;
+		case '3': ModifyStock(); printf("库存修改完毕\n"); break;
+		case '4': if (ScanBoolean("确定退出嘛(y/n)：")) op = -52; break;
+		default: break;
 		}
 
 		// 退出时保存库存信息
@@ -226,6 +205,7 @@ void _stock()
 		}
 
 		// 清屏幕
+		sleep(500);
 		clear();
 	}
 }

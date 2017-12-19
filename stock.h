@@ -13,4 +13,4 @@ bool SaveStockToFile();
 void OutputStock();
 
 /// <summary>进入仓库模式</summary>
-void _stock();
+void menu_stock();

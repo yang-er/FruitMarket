@@ -46,4 +46,4 @@ void PrintVip();
 void ChargeInConsole(short uid);
 
 /// <summary>进入用户模块</summary>
-void _user();
+void menu_user();

@@ -4,7 +4,7 @@
 #include "stock.h"
 #include "scan.h"
 
-extern void menu();
+extern void menu_main();
 
 int main()
 {
@@ -15,7 +15,7 @@ int main()
 	LoadUserFromFile();
 	sleep(250);
 	clear();
-	menu();
+	menu_main();
 	SaveUserToFile();
 	SaveTicketToFile();
 	SaveStockToFile();
@@ -24,7 +24,7 @@ int main()
     return 0;
 }
 
-void menu()
+void menu_main()
 {
 	char op;
 	while (true)
@@ -34,13 +34,13 @@ void menu()
 		switch (op)
 		{
 		case '1':
-			_stock();
+			menu_stock();
 			break;
 		case '2':
-			_user();
+			menu_user();
 			break;
 		case '3':
-			_ticket();
+			menu_ticket();
 			break;
 		case '5':
 			printf("coming soon...\n");
