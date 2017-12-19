@@ -390,6 +390,22 @@ bool largeticket(int x, int y) {
 	system("pause");
 	return false;
 }
+
+bool ticketattime(int a1,int a2) {
+	printf("==============================================\n");
+	printf("|                水果超市票据                |\n");
+	pTicketTemp = pTicketFront;
+	while (pTicketTemp != NULL) {
+		if (pTicketTemp->time>=a1||pTicketTemp->time<=a2)
+		{
+			OutputTicket(pTicketTemp, false);
+		}
+		pTicketTemp = pTicketTemp->next;
+	}
+	printf("==============================================\n");
+	system("pause");
+	return false;
+}
 void _ticket_test()
 {
 	clear();
@@ -462,6 +478,10 @@ void _ticket_test()
 			sleep(500);
 			break;
 		case '7':
+			int a1, a2;
+			a1=ScanTime("请输入起始下单时间：");
+			a2=ScanTime("请输入终止下单时间：");
+			ticketattime(a1,a2);
 			sleep(500);
 			break;
 		case '8':

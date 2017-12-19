@@ -38,4 +38,4 @@ bool DeleteTicket(short tid);
 
 bool largeticket(int x,int y);
 
-bool ticketattime();
+bool ticketattime(int a1, int a2);
