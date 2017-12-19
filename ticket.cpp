@@ -252,12 +252,47 @@ void OutputTicket(ticket* ticket, bool isFull)
 
 void OutputAllTickets()
 {
+	// 临时变量
+	double dbTemp;
+
+	// 开始时间
+	time_t ptStart = pTime;
+	if (ScanBoolean("是否选择开始时间？(y/n)："))
+		ptStart = ScanTime("输入开始的时间：");
+
+	// 结束时间
+	time_t ptEnd = pTime + 86341;
+	if (ScanBoolean("是否选择结束时间？(y/n)："))
+		ptEnd = ScanTime("输入结束的时间：");
+	if (ptStart < ptEnd) ptEnd = pTime + 86341;
+
+	// 最低消费
+	int crMin = 0;
+	if (ScanBoolean("是否过滤最低消费？(y/n)："))
+	{
+		ScanDouble("请输入最低消费金额：", &dbTemp);
+		if (dbTemp >= 0) crMin = cent(dbTemp);
+	}
+
+	// 最高消费
+	int crMax = -1;
+	if (ScanBoolean("是否过滤最高消费？(y/n)："))
+	{
+		ScanDouble("请输入最高消费金额：", &dbTemp);
+		if (dbTemp > 0) crMax = cent(dbTemp);
+		if (crMax < crMin) crMax = -1;
+	}
+
+	// 输出符合条件的小票
 	printf("==============================================\n");
 	printf("|                水果超市票据                |\n");
 	pTicketTemp = pTicketFront->next;
 	while (pTicketTemp != NULL)
 	{
-		OutputTicket(pTicketTemp, false);
+		int usage = pTicketTemp->given - pTicketTemp->left;
+		if ((pTicketTemp->time >= ptStart) && (pTicketTemp->time <= ptEnd)
+				&& (usage >= crMin) && (crMax == -1 || usage <= crMax))
+			OutputTicket(pTicketTemp, false);
 		pTicketTemp = pTicketTemp->next;
 	}
 	printf("==============================================\n");
@@ -337,6 +372,7 @@ void ExportTickets()
 	} while (true);
 	if (pFile == NULL) return;
 
+	// 打印表头
 	fprintf(pFile, "票号,时间,付款人,卡号,合计,收款,找零");
 	for (int i = 0; i < 5; i++)
 	{
@@ -344,6 +380,7 @@ void ExportTickets()
 	}
 	fprintf(pFile, "\n");
 
+	// 打印每条记录
 	pTicketTemp = pTicketFront;
 	while (pTicketTemp != NULL)
 	{
@@ -364,49 +401,13 @@ void ExportTickets()
 		pTicketTemp = pTicketTemp->next;
 	}
 
+	// 结束打印
 	fclose(pFile);
 	printf("记录已导出到“%s”。\n", pFileName);
 
 }
 
-bool largeticket(int x, int y) {
-	printf("==============================================\n");
-	printf("|                水果超市票据                |\n");
-	pTicketTemp = pTicketFront;
-	while (pTicketTemp != NULL) {
-		int sum = 0;
-		int i = 0;
-		for (i = 0; i < 5; i++) {
-			if (pTicketTemp->amount[i] == 0) continue;
-			sum += pTicketTemp->credit[i]/100;
-		}
-		if (sum >= x && sum <= y)
-		{
-			OutputTicket(pTicketTemp, false);	
-		}
-		pTicketTemp = pTicketTemp->next;
-	}
-	printf("==============================================\n");
-	system("pause");
-	return false;
-}
-
-bool ticketattime(int a1,int a2) {
-	printf("==============================================\n");
-	printf("|                水果超市票据                |\n");
-	pTicketTemp = pTicketFront;
-	while (pTicketTemp != NULL) {
-		if (pTicketTemp->time>=a1||pTicketTemp->time<=a2)
-		{
-			OutputTicket(pTicketTemp, false);
-		}
-		pTicketTemp = pTicketTemp->next;
-	}
-	printf("==============================================\n");
-	system("pause");
-	return false;
-}
-void _ticket_test()
+void _ticket()
 {
 	clear();
 	char op;
@@ -421,10 +422,8 @@ void _ticket_test()
 		printf("|   3.列出所有小票\n");
 		printf("|   4.修改小票内容\n");
 		printf("|   5.删除小票\n");
-		printf("|   6.查询大额购物信息\n");
-		printf("|   7.查询某段时间内购物信息\n");
-		printf("|   8.导出购物信息\n");
-		printf("|   9.退出\n");
+		printf("|   6.导出购物信息\n");
+		printf("|   7.退出\n");
 		printf("|\n");
 		printf("==================\n");
 		op = ScanOption("请选择进入：", '1', '9');
@@ -467,28 +466,10 @@ void _ticket_test()
 			sleep(500);
 			break;
 		case '6':
-			int x, y;
-			do {
-				ScanInt("请输入下限:", &x);
-			} while (x <= 0 || x >= 1000);
-			do{
-			ScanInt("请输入上限:", &y);
-		}	while (y <= 0 || y >= 1000);
-			largeticket(x,y);
-			sleep(500);
-			break;
-		case '7':
-			int a1, a2;
-			a1=ScanTime("请输入起始下单时间：");
-			a2=ScanTime("请输入终止下单时间：");
-			ticketattime(a1,a2);
-			sleep(500);
-			break;
-		case '8':
 			ExportTickets();
 			sleep(500);
 			break;
-		case '9':
+		case '7':
 			if (ScanBoolean("确定退出嘛(y/n)："))
 				op = -52;
 			break;

@@ -166,6 +166,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="stock.dat" />
+    <None Include="ticket.dat" />
     <None Include="user.dat" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

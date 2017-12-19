@@ -64,5 +64,8 @@
     <None Include="user.dat">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="ticket.dat">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

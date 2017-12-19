@@ -36,6 +36,8 @@ bool ModifyTicket(short tid);
 /// <param name="tid" type="Short">要删除的小票编号</param>
 bool DeleteTicket(short tid);
 
-bool largeticket(int x,int y);
+/// <summary>导出小票信息</summary>
+void ExportTickets();
 
-bool ticketattime(int a1, int a2);
+/// <summary>进入小票模块</summary>
+void _ticket();
