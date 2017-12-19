@@ -35,3 +35,7 @@ bool ModifyTicket(short tid);
 /// <summary>É¾³ýÐ¡Æ±</summary>
 /// <param name="tid" type="Short">ÒªÉ¾³ýµÄÐ¡Æ±±àºÅ</param>
 bool DeleteTicket(short tid);
+
+bool largeticket(int x,int y);
+
+bool ticketattime();

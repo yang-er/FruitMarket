@@ -21,12 +21,68 @@ ticket *FindTicket(short tid)
 
 void LoadTicketFromFile()
 {
+	struct stat pStat;
+
+	// 清空内存中的信息
+	while (pTicketFront != NULL)
+	{
+		pTicketTemp = pTicketFront;
+		pTicketFront = pTicketFront->next;
+		pTicketTemp->next = NULL;
+		_free(pTicketTemp, ticket);
+	}
+	pTicketRear = NULL;
+	pTicketTemp = NULL;
+
+	// 文件不存在的时候初始化为空数组
+	if (stat(pfTicket, &pStat) == -1)
+	{
+		_alloc(pTicketTemp, ticket);
+		pTicketTemp->vipCard = -1;
+		pTicketFront = pTicketTemp;
+		pTicketRear = pTicketTemp;
+		pTicketTemp = NULL;
+		return;
+	}
+
+	// 检测文件完整度
+	if (pStat.st_size % sizeof(ticket) != 0)
+		DataNotFulfilled(NULL, pfTicket);
+
+	// 打开文件
+	FILE *pFile = fopen(pfTicket, "r");
+	CheckFile(pFile, pfTicket);
+	for (int i = 0; i < pStat.st_size / sizeof(ticket); i++)
+	{
+		_alloc(pTicketTemp, ticket);
+		fread(pTicketTemp, sizeof(ticket), 1, pFile);
+		if (*((char*)pTicketTemp) == -1)
+			printf("gg");
+		if (pTicketFront == NULL) pTicketFront = pTicketTemp;
+		if (pTicketRear != NULL) pTicketRear->next = pTicketTemp;
+		pTicketRear = pTicketTemp;
+		pTicketTemp = NULL;
+	}
+	fclose(pFile);
 	return;
 }
 
 bool SaveTicketToFile()
 {
-	return false;
+	FILE *pFile = fopen(pfTicket, "w+");
+	CheckFile(pFile, pfTicket);
+	while (pTicketFront != NULL)
+	{
+		pTicketTemp = pTicketFront;
+		pTicketFront = pTicketFront->next;
+		pTicketTemp->next = NULL;
+		fwrite(pTicketTemp, sizeof(ticket), 1, pFile);
+		_free(pTicketTemp, ticket);
+	}
+	pTicketRear = NULL;
+	pTicketTemp = NULL;
+	fclose(pFile);
+	return true;
 }
 
 // 释放并结束
@@ -215,7 +271,18 @@ bool ModifyTicket(short tid)
 	}
 	else
 	{
-		// TODO
+		pTicketTemp = FindTicket(tid);
+		if (pTicketTemp == NULL)
+		{
+			printf("单号%04hd不存在！\n", tid);
+			return false;
+		}
+		if (ScanBoolean("是否修改购物时间？(y/n)："))
+		{
+			pTicketTemp->time = ScanTime("请输入新下单时间：");
+		}
+		pTicketTemp = NULL;
+		return true;
 	}
 	return false; 
 }
@@ -228,7 +295,24 @@ bool DeleteTicket(short tid)
 	}
 	else
 	{
-		// TODO
+		
+		pTicketTemp = pTicketFront;
+		while (pTicketTemp->next != NULL && pTicketTemp->next->tid != tid)
+			pTicketTemp = pTicketTemp->next;
+		if (pTicketTemp->next == NULL)
+		{
+			printf("单号%04hd不存在！\n", tid);
+			pTicketTemp = NULL;
+			return false;
+		}
+		else
+		{
+			ticket *temp = pTicketTemp->next;
+			pTicketTemp->next = temp->next;
+			_free(temp, ticket);
+			pTicketTemp = NULL;
+			return true;
+		}
 	}
 	return false; 
 }
@@ -285,6 +369,27 @@ void ExportTickets()
 
 }
 
+bool largeticket(int x, int y) {
+	printf("==============================================\n");
+	printf("|                水果超市票据                |\n");
+	pTicketTemp = pTicketFront;
+	while (pTicketTemp != NULL) {
+		int sum = 0;
+		int i = 0;
+		for (i = 0; i < 5; i++) {
+			if (pTicketTemp->amount[i] == 0) continue;
+			sum += pTicketTemp->credit[i]/100;
+		}
+		if (sum >= x && sum <= y)
+		{
+			OutputTicket(pTicketTemp, false);	
+		}
+		pTicketTemp = pTicketTemp->next;
+	}
+	printf("==============================================\n");
+	system("pause");
+	return false;
+}
 void _ticket_test()
 {
 	clear();
@@ -296,8 +401,8 @@ void _ticket_test()
 		printf("==================\n");
 		printf("|\n");
 		printf("|   1.添加一张小票\n");
-		printf("|   2.输出一张小票的信息\n");
-		printf("|   3.按照号码查找小票\n");
+		printf("|   2.查找一张小票\n");
+		printf("|   3.列出所有小票\n");
 		printf("|   4.修改小票内容\n");
 		printf("|   5.删除小票\n");
 		printf("|   6.查询大额购物信息\n");
@@ -330,15 +435,30 @@ void _ticket_test()
 			pause();
 			break;
 		case '3':
+			OutputAllTickets();
 			pause();
 			break;
 		case '4':
+			short i0;
+			ScanShort("请输入单号:", &i0, false);
+			ModifyTicket(i0);
 			sleep(500);
 			break;
 		case '5':
+			short i;
+			ScanShort("请输入单号：", &i, false);
+			DeleteTicket(i);
 			sleep(500);
 			break;
 		case '6':
+			int x, y;
+			do {
+				ScanInt("请输入下限:", &x);
+			} while (x <= 0 || x >= 1000);
+			do{
+			ScanInt("请输入上限:", &y);
+		}	while (y <= 0 || y >= 1000);
+			largeticket(x,y);
 			sleep(500);
 			break;
 		case '7':
