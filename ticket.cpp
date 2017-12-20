@@ -321,7 +321,75 @@ bool ModifyTicket(short tid)
 {
 	if (ScanBoolean("是否同时变动金额、库存等的改动？(y/n)："))
 	{
-		// TODO
+		pTicketTemp = FindTicket(tid);
+		if (pTicketTemp == NULL)
+		{
+			printf("单号%04hd不存在！\n", tid);
+			return false;
+		}
+		if (ScanBoolean("是否修改购物时间？(y/n)："))
+		{
+			pTicketTemp->time = ScanTime("请输入新下单时间：");
+		}
+		if (ScanBoolean("是否修改购物数量？\n注意:修改后单价以当前市场价为准:(y/n)"))
+		{
+			double c = 0;
+			int d = 0, sum = 0;
+			char msg[80];
+			for (int i = 0; i < 5; i++)
+			{
+				sum = 0;
+				if (warehouse[i].isSingled)
+				{
+					sprintf(msg, "请输入%s购买后数量（已购%d，库存%d，一盒%d个）：",
+						warehouse[i].fruitName, pTicketTemp->amount[i], warehouse[i].left, warehouse[i].boxCount);
+					do { ScanInt(msg, &d); } while ((d < 0 || warehouse[i].left - (d - pTicketTemp->amount[i]) < 0) && printf("购买数量不合法！\n"));
+					if (d <= pTicketTemp->amount[i])
+					{
+						sum -= (pTicketTemp->amount[i] - d) * pTicketTemp->credit[i] / pTicketTemp->amount[i];
+						warehouse[i].left += pTicketTemp->amount[i] - d;
+						warehouse[i].sold -= pTicketTemp->amount[i] - d;
+					}
+					else
+					{
+						sum += (d - pTicketTemp->amount[i]) * warehouse[i].singlePrice;
+						warehouse[i].left -= d - pTicketTemp->amount[i];
+						warehouse[i].sold += d - pTicketTemp->amount[i];
+					}
+				}
+				else
+				{
+					sprintf(msg, "请输入%s购买后数量（已购%.2lf，剩余%.2lf）：",
+						warehouse[i].fruitName, dollar(pTicketTemp->amount[i]), dollar(warehouse[i].left));
+					do { ScanDouble(msg, &c); } while ((c < 0 || warehouse[i].left - (c - pTicketTemp->amount[i]) < 0) && printf("购买数量不合法！\n"));
+					d = cent(c);
+					if (d <= pTicketTemp->amount[i])
+					{
+						sum -= cent(dollar(pTicketTemp->amount[i] - d) * 1.0 * pTicketTemp->credit[i] / pTicketTemp->amount[i]);
+						warehouse[i].left += pTicketTemp->amount[i] - d;
+						warehouse[i].sold -= pTicketTemp->amount[i] - d;
+					}
+					else
+					{
+						sum += (d - pTicketTemp->amount[i]) * warehouse[i].singlePrice;
+						warehouse[i].left -= d - pTicketTemp->amount[i];
+						warehouse[i].sold += d - pTicketTemp->amount[i];
+					}
+				}
+				pTicketTemp->amount[i] = d;
+				pTicketTemp->credit[i] += sum;
+			}
+			if (pTicketTemp->vipCard == -1)
+			{
+				pUserTemp = GetCardById(pTicketTemp->vipCard);
+				if (pUserTemp == NULL || !ChargeToCard(sum, 0, true))
+				{
+					printf("无法返回到卡内，请退现金%.2lf元。", dollar(sum));
+					pUserTemp = NULL;
+				}
+			}
+	}
+		
 	}
 	else
 	{
