@@ -489,7 +489,11 @@ void ExportTickets()
 	int calc;
 	while (pTicketTemp != NULL)
 	{
-		if (pTicketTemp->time < pTime || pTicketTemp->time > pTime + 86399) continue;
+		if (pTicketTemp->time < pTime || pTicketTemp->time > pTime + 86399)
+		{
+			pTicketTemp = pTicketTemp->next;
+			continue;
+		}
 		calc = int(pTicketTemp->time - pTime);
 		fprintf(pFile, "%04d,%d:%02d,", pTicketTemp->tid, calc / 3600, calc / 60 % 60);
 		puser = GetCardById(pTicketTemp->vipCard);
