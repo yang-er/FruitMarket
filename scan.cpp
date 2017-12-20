@@ -152,11 +152,6 @@ void SetCurrentDate()
 			|| ((pTime == -1) && printf("输入内容无法被识别！\n")) // 内容不能被识别
 		);
 
-		// 再次输出时间
-		printf("程序日期：%d年%d月%d日。\n",
-			1900 + pCurrentDate->tm_year,
-			pCurrentDate->tm_mon + 1,
-			pCurrentDate->tm_mday);
 	}
 	else
 	{

@@ -109,9 +109,15 @@ time_t ScanTime(const char* message);
 void SetCurrentDate();
 
 /// <summary>进入第二天</summary>
-void PushDate();
+void push_date();
 
 /// <summary>左右清除空格</summary>
 /// <param name="buf" type="String">原字符串</param>
 /// <param name="len" type="Integer">缓冲区长度</param>
 void trim(char *buf, size_t len);
+
+/// <summary>主菜单</summary>
+void menu_main();
+
+/// <summary>刷新数据</summary>
+void flush_data();
