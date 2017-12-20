@@ -1,10 +1,8 @@
 #include "stdafx.h"
+#include "scan.h"
+#include "stock.h"
 #include "user.h"
 #include "ticket.h"
-#include "stock.h"
-#include "scan.h"
-
-extern void menu_main();
 
 int main()
 {
@@ -15,6 +13,7 @@ int main()
 	if (pTicketFront == pTicketRear)
 	{
 		SetCurrentDate();
+		flush_data();
 	}
 	else
 	{
@@ -61,7 +60,7 @@ void menu_main()
 			menu_ticket();
 			break;
 		case '5':
-			PushDate();
+			push_date();
 			break;
 		case '4':
 			if (ScanBoolean("确定退出嘛(y/n)："))
@@ -75,15 +74,28 @@ void menu_main()
 	}
 }
 
-void PushDate()
+void push_date()
 {
-	ExportTickets();
-	pCurrentDate->tm_mday += 1;
-	pTime = mktime(pCurrentDate);
-	for (int i = 0; i < 5; i++)
-		warehouse[i].todayUsage = 0;
-	for (pUserTemp = pUserFront; pUserTemp != NULL; pUserTemp = pUserTemp->next)
-		pUserTemp->todayUsage = 0;
+	if (!ScanBoolean("直接进入下一天？(y/n)："))
+	{
+		SetCurrentDate();
+		flush_data();
+	}
+	else
+	{
+		ExportTickets();
+		pCurrentDate->tm_mday += 1;
+		pTime = mktime(pCurrentDate);
+		for (int i = 0; i < 5; i++)
+			warehouse[i].todayUsage = 0;
+		for (pUserTemp = pUserFront; pUserTemp != NULL; pUserTemp = pUserTemp->next)
+			pUserTemp->todayUsage = 0;
+	}
 	
 	printf("已进入%d年%d月%d日。\n", pCurrentDate->tm_year + 1900, pCurrentDate->tm_mon + 1, pCurrentDate->tm_mday);
+}
+
+void flush_data()
+{
+
 }
