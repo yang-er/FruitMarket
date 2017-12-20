@@ -287,7 +287,7 @@ void OutputAllTickets()
 	time_t ptEnd = pTime + 86341;
 	if (ScanBoolean("是否选择结束时间？(y/n)："))
 		ptEnd = ScanTime("输入结束的时间：");
-	if (ptStart < ptEnd) ptEnd = pTime + 86341;
+	if (ptStart >= ptEnd) ptEnd = pTime + 86341;
 
 	// 最低消费
 	int crMin = 0;
