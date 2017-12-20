@@ -38,7 +38,6 @@ void LoadTicketFromFile()
 	if (stat(pfTicket, &pStat) == -1)
 	{
 		_alloc(pTicketTemp, ticket);
-		pTicketTemp->tid = -1;
 		pTicketFront = pTicketTemp;
 		pTicketRear = pTicketTemp;
 		pTicketTemp = NULL;
@@ -145,13 +144,7 @@ static void addOne()
 {
 	_alloc(pTicketTemp, ticket);
 	// 确定小票编号
-	bool bContinue = true;
-	do {
-		ScanShort("请输入序号：", &pTicketTemp->tid, false);
-		bContinue = FindTicket(pTicketTemp->tid) != NULL;
-		if (bContinue) printf("小票%04d已存在！\n", pTicketTemp->tid);
-		if (bContinue && !ScanBoolean("是否更换号码？(y/n)：")) doClean();
-	} while (bContinue);
+	pTicketTemp->tid = pTicketRear->tid + 1;
 
 	// 确定购买时间
 	pTicketTemp->time = ScanTime("请输入下单时间：");
@@ -235,7 +228,10 @@ void OutputTicket(ticket* ticket, bool isFull)
 	if (ticket->vipCard != -1)
 	{
 		pUserTemp = GetCardById(ticket->vipCard);
-		printf("|  付款人：%-10s  付款卡：%04d          |\n", pUserTemp->name, pUserTemp->uid);
+		if (pUserTemp == NULL)
+			printf("|  付款人：已删除      付款卡：----          |\n");
+		else
+			printf("|  付款人：%-10s  付款卡：%04d          |\n", pUserTemp->name, pUserTemp->uid);
 		pUserTemp = NULL;
 	}
 	printf("|  付款方式：%s    票据号：%04d          |\n", ticket->vipCard == -1 ? "现金  " : "会员卡", ticket->tid);
@@ -404,13 +400,15 @@ void ExportTickets()
 	fprintf(pFile, "\n");
 
 	// 打印每条记录
-	pTicketTemp = pTicketFront;
+	pTicketTemp = pTicketFront->next;
+	user *puser;
+	int calc;
 	while (pTicketTemp != NULL)
 	{
-		int calc = int(pTicketTemp->time - pTime);
+		calc = int(pTicketTemp->time - pTime);
 		fprintf(pFile, "%04d,%d:%02d,", pTicketTemp->tid, calc / 3600, calc / 60 % 60);
-		user *puser = GetCardById(pTicketTemp->vipCard);
-		if (puser == NULL) fprintf(pFile, "已删除\t0000\t");
+		puser = GetCardById(pTicketTemp->vipCard);
+		if (puser == NULL) fprintf(pFile, "已删除,0000,");
 		else fprintf(pFile, "%s,%04d,", puser->name, puser->uid);
 		fprintf(pFile, "%.2lf,%.2lf,%.2lf",
 			dollar(pTicketTemp->given - pTicketTemp->left),
