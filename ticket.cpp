@@ -354,6 +354,9 @@ bool DeleteTicket(short tid)
 		return false;
 	}
 
+	ticket *temp = pTicketTemp->next;
+	pTicketTemp->next = temp->next;
+
 	if (ScanBoolean("是否立刻撤销金额、库存等的改动？(y/n)："))
 	{
 		int credit = 0;
@@ -361,16 +364,16 @@ bool DeleteTicket(short tid)
 		// 消除库存影响
 		for (int i = 0; i < 5; i++)
 		{
-			warehouse[i].left += pTicketTemp->amount[i];
-			warehouse[i].sold -= pTicketTemp->amount[i];
-			credit += pTicketTemp->credit[i];
+			warehouse[i].left += temp->amount[i];
+			warehouse[i].sold -= temp->amount[i];
+			credit += temp->credit[i];
 		}
 
 		// 消除余额影响
 		if (pTicketTemp->vipCard == -1)
 		{
-			pUserTemp = GetCardById(pTicketTemp->vipCard);
-			if (pUserTemp == NULL || !ChargeToCard(pTicketTemp->vipCard, 0, true))
+			pUserTemp = GetCardById(temp->vipCard);
+			if (pUserTemp == NULL || !ChargeToCard(temp->vipCard, 0, true))
 			{
 				printf("无法返回到卡内，请退现金%.2lf元。", dollar(credit));
 				pUserTemp = NULL;
@@ -379,8 +382,6 @@ bool DeleteTicket(short tid)
 
 	}
 
-	ticket *temp = pTicketTemp->next;
-	pTicketTemp->next = temp->next;
 	_free(temp, ticket);
 	pTicketTemp = NULL;
 	return true;
