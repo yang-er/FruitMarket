@@ -97,5 +97,25 @@ void push_date()
 
 void flush_data()
 {
-
+	for (pUserTemp = pUserFront; pUserTemp != NULL; pUserTemp = pUserTemp->next)
+		pUserTemp->todayUsage = 0;
+	for (int i = 0; i < 5; i++)
+		warehouse[i].todayUsage = 0;
+	int sum;
+	for (pTicketTemp = pTicketFront->next; pTicketTemp != NULL; pTicketTemp = pTicketTemp->next)
+	{
+		if (pTicketTemp->time >= pTime && pTicketTemp->time <= pTime + 86399)
+		{
+			sum = 0;
+			for (int i = 0; i < 5; i++)
+			{
+				sum += pTicketTemp->credit[i];
+				warehouse[i].todayUsage += pTicketTemp->credit[i];
+			}
+			pUserTemp = GetCardById(pTicketTemp->vipCard);
+			if (pUserTemp != NULL)
+				pUserTemp->todayUsage += sum;
+			pUserTemp = NULL;
+		}
+	}
 }
