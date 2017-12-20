@@ -343,22 +343,48 @@ bool ModifyTicket(short tid)
 
 bool DeleteTicket(short tid)
 {
+	short tid;
+	ScanShort("请输入 卡号：", &tid, false);
+	pTicketTemp = pTicketFront;
+	while (pTicketTemp->next != NULL && pTicketTemp->next->tid != tid)
+		pTicketTemp = pTicketTemp->next;
+	if (pTicketTemp->next == NULL)
+	{
+		printf("单号%04hd不存在！\n", tid);
+		pTicketTemp = NULL;
+		return false;
+	}
+
 	if (ScanBoolean("是否撤销金额、库存等的改动？(y/n)："))
 	{
-		// TODO
-	}
-	else
-	{
-		
-		pTicketTemp = pTicketFront;
-		while (pTicketTemp->next != NULL && pTicketTemp->next->tid != tid)
-			pTicketTemp = pTicketTemp->next;
-		if (pTicketTemp->next == NULL)
-		{
-			printf("单号%04hd不存在！\n", tid);
-			pTicketTemp = NULL;
-			return false;
+		if (pTicketTemp->vipCard == -1) {
+			for (int i = 0; i < 5; i++)
+			{
+				warehouse[i].left += pTicketTemp->amount[i];
+				warehouse[i].sold -= pTicketTemp->amount[i];
+				warehouse[i].todayUsage -= pTicketTemp->credit[i];
+
+			}
 		}
+		else
+		{
+			for (int i = 0; i < 5; i++)
+			{
+				warehouse[i].left += pTicketTemp->amount[i];
+				warehouse[i].sold -= pTicketTemp->amount[i];
+				warehouse[i].todayUsage -= pTicketTemp->credit[i];
+				ChargeToCard(pTicketTemp->vipCard, pTicketTemp->amount[i], 1);
+			}
+			ticket *temp = pTicketTemp->next;
+			pTicketTemp->next = temp->next;
+			_free(temp, ticket);
+			pTicketTemp = NULL;
+			return true;
+		}
+	}
+
+		
+		
 		else
 		{
 			ticket *temp = pTicketTemp->next;
@@ -367,7 +393,7 @@ bool DeleteTicket(short tid)
 			pTicketTemp = NULL;
 			return true;
 		}
-	}
+	
 	return false; 
 }
 
