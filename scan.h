@@ -9,9 +9,6 @@
 	#define __extern extern
 #endif
 
-// 清空stdin的多余内容
-#define flush() rewind(stdin)
-
 // 文件p是否存在
 #define file_exists(p) (_access(p, 0) != EOF)
 
@@ -28,7 +25,7 @@
 } while (false)
 
 // 按任意键继续
-#define pause() do { \
+#define _pause() do { \
 	printf("\n请按任意键继续. . . "); \
 	flush(); \
 	getchar(); \
@@ -39,6 +36,8 @@
 #define dollar(c) ((c)/100.0)
 
 #ifdef WINVER
+	// 清空stdin的多余内容
+	#define flush() rewind(stdin)
 	// 清屏幕
 	#define clear() system("cls")
 	// 详见<Windows.h, Kernel32.lib>
@@ -47,6 +46,10 @@
 	#define sleep(a) Sleep(a)
 #else
 	#include <unistd.h>
+	#include <stdio_ext.h>
+	// 清空stdin的多余内容
+	#define flush() __fpurge(stdin)
+	#define _access access
 	// 清屏幕
 	#define clear() system("clear")
 	// 暂停a毫秒

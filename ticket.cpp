@@ -170,7 +170,7 @@ static void addOne()
 				warehouse[i].fruitName, dollar(warehouse[i].singlePrice), warehouse[i].tagName, dollar(warehouse[i].left));
 			do { ScanDouble(msg, &c); } while ((c < 0 || c > dollar(warehouse[i].left)) && printf("购买数量不合法！\n"));
 			pTicketTemp->amount[i] = cent(c);
-			pTicketTemp->credit[i] = int(c * warehouse[i].singlePrice);
+			pTicketTemp->credit[i] = (int)(c * warehouse[i].singlePrice);
 		}
 		sum += pTicketTemp->credit[i];
 	}
@@ -236,7 +236,7 @@ void OutputTicket(ticket* ticket, bool isFull)
 	}
 	printf("|  付款方式：%s    票据号：%04d          |\n", ticket->vipCard == -1 ? "现金  " : "会员卡", ticket->tid);
 	printf("|                                            |\n");
-	int calc = int(ticket->time - pTime);
+	int calc = (int)(ticket->time - pTime);
 	printf("|  订购时间：%04d年%2d月%2d日 %2d:%02d            |\n", 
 		pCurrentDate->tm_year + 1900, pCurrentDate->tm_mon + 1, pCurrentDate->tm_mday, calc / 3600, calc / 60 % 60);
 	printf("|--------------------------------------------|\n");
@@ -401,7 +401,7 @@ bool ModifyTicket(short tid)
 		case 5:
 				pTicketTemp->left -= sum;
 			printf("操作结束\n");
-			pause();
+			_pause();
 			break;
 		default:
 			printf("程序异常。\n");
@@ -496,7 +496,7 @@ void ExportTickets()
 			pTicketTemp = pTicketTemp->next;
 			continue;
 		}
-		calc = int(pTicketTemp->time - pTime);
+		calc = (int)(pTicketTemp->time - pTime);
 		fprintf(pFile, "%04d,%d:%02d,", pTicketTemp->tid, calc / 3600, calc / 60 % 60);
 		puser = GetCardById(pTicketTemp->vipCard);
 		if (puser == NULL) fprintf(pFile, "已删除,0000,");
@@ -523,6 +523,7 @@ void menu_ticket()
 {
 	clear();
 	char op;
+	short p;
 	while (true)
 	{
 		printf("==================\n");
@@ -545,9 +546,8 @@ void menu_ticket()
 		{
 		case '1': AddTicket(); break;
 		case '2':
-			short tid;
-			ScanShort("请输入购物单号：", &tid, false);
-			pTicketTemp = FindTicket(tid);
+			ScanShort("请输入购物单号：", &p, false);
+			pTicketTemp = FindTicket(p);
 			if (pTicketTemp == NULL)
 			{
 				printf("没有找到该购物记录。\n");
@@ -557,11 +557,11 @@ void menu_ticket()
 				OutputTicket(pTicketTemp, true);
 				pTicketTemp = NULL;
 			}
-			pause();
+			_pause();
 			break;
-		case '3': OutputAllTickets(); pause(); break;
-		case '4': short i0; ScanShort("请输入单号:", &i0, false); ModifyTicket(i0); break;
-		case '5': short i; ScanShort("请输入单号：", &i, false); DeleteTicket(i); break;
+		case '3': OutputAllTickets(); _pause(); break;
+		case '4': ScanShort("请输入单号:", &p, false); ModifyTicket(p); break;
+		case '5': ScanShort("请输入单号：", &p, false); DeleteTicket(p); break;
 		case '6': ExportTickets(); break;
 		case '7': flush_data(); break;
 		case '8': if (ScanBoolean("确定退出嘛(y/n)：")) op = -52; break;

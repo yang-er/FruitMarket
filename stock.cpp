@@ -188,7 +188,7 @@ void menu_stock()
 		printf("\n");
 		switch (op)
 		{
-		case '1': OutputStock(); pause(); break;
+		case '1': OutputStock(); _pause(); break;
 		case '2': AddStock(); printf("添加完毕\n"); break;
 		case '3': ModifyStock(); printf("库存修改完毕\n"); break;
 		case '4': if (ScanBoolean("确定退出嘛(y/n)：")) op = -52; break;
