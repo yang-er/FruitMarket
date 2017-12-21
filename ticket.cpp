@@ -329,7 +329,7 @@ bool ModifyTicket(short tid)
 	if (ScanBoolean("是否修改购物时间？(y/n)："))
 		pTicketTemp->time = ScanTime("请输入新下单时间：");
 
-	printf("如果您要修改购物数量，退款按购买时单价退，收款按现在市场价格收取。");
+	printf("如果您要修改购物数量，退款按购买时单价退，收款按现在市场价格收取。\n");
 	if (ScanBoolean("是否修改购物数量？(y/n)："))
 	{
 		double c = 0;
