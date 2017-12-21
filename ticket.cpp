@@ -342,7 +342,9 @@ bool ModifyTicket(short tid)
 				sprintf(msg, "请输入%s数量（已购%d，库存%d，一盒%d个）：",
 					warehouse[i].fruitName, pTicketTemp->amount[i], warehouse[i].left, warehouse[i].boxCount);
 				do { ScanInt(msg, &d); } while ((d < 0 || warehouse[i].left - (d - pTicketTemp->amount[i]) < 0) && printf("购买数量不合法！\n"));
-				if (d <= pTicketTemp->amount[i])
+				if (d == pTicketTemp->amount[i])
+					continue; 
+				else if (d < pTicketTemp->amount[i])
 				{
 					credit = -(pTicketTemp->amount[i] - d) * pTicketTemp->credit[i] / pTicketTemp->amount[i];
 					warehouse[i].left += pTicketTemp->amount[i] - d;
