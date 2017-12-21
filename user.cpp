@@ -273,6 +273,7 @@ void ChargeInConsole(short uid)
 
 void menu_user()
 {
+	clear();
 	char op;
 	while (true)
 	{
@@ -293,14 +294,14 @@ void menu_user()
 		printf("\n");
 		switch (op)
 		{
-		case '1': CreateCard(); break;
-		case '2': ChargeInConsole(-2); break;
-		case '3': short i1; ScanShort("请输入会员卡号：", &i1, false); ChangeVip(i1); printf("修改结束。\n"); break;
-		case '4': if(CrashCard()) printf("删除卡成功。\n"); break;
-		case '5': PrintVip(); pause(); break;
-		case '6': ListAllVips(); pause(); break;
-		case '7': if (ScanBoolean("确定退出嘛(y/n)：")) op = -52; break;
-		default: break;
+			case '1': CreateCard(); break;
+			case '2': ChargeInConsole(-2); break;
+			case '3': short i1; ScanShort("请输入会员卡号：", &i1, false); ChangeVip(i1); printf("修改结束。\n"); break;
+			case '4': if(CrashCard()) printf("删除卡成功。\n"); break;
+			case '5': PrintVip(); pause(); break;
+			case '6': ListAllVips(); pause(); break;
+			case '7': if (ScanBoolean("确定退出嘛(y/n)：")) op = -52; break;
+			default: break;
 		}
 		if (op == -52)
 		{
