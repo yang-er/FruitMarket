@@ -361,7 +361,9 @@ bool ModifyTicket(short tid)
 					warehouse[i].fruitName, dollar(pTicketTemp->amount[i]), dollar(warehouse[i].left));
 				do { ScanDouble(msg, &c); } while ((c < 0 || warehouse[i].left - (c - pTicketTemp->amount[i]) < 0) && printf("购买数量不合法！\n"));
 				d = cent(c);
-				if (d <= pTicketTemp->amount[i])
+				if (d == pTicketTemp->amount[i])
+					continue;
+				else if (d < pTicketTemp->amount[i])
 				{
 					credit = -cent((dollar(pTicketTemp->amount[i]) - c) * pTicketTemp->credit[i] / pTicketTemp->amount[i]);
 					warehouse[i].left += pTicketTemp->amount[i] - d;
