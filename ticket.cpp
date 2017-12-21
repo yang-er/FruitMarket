@@ -331,7 +331,7 @@ bool ModifyTicket(short tid)
 		{
 			pTicketTemp->time = ScanTime("请输入新下单时间：");
 		}
-		if (ScanBoolean("是否修改购物数量？\n注意:修改后单价以当前市场价为准:(y/n)"))
+		if (ScanBoolean("是否修改购物数量？\n注意:修改后单价以当前市场价为准(y/n):"))
 		{
 			double c = 0;
 			int d = 0, sum = 0;
@@ -346,7 +346,8 @@ bool ModifyTicket(short tid)
 					do { ScanInt(msg, &d); } while ((d < 0 || warehouse[i].left - (d - pTicketTemp->amount[i]) < 0) && printf("购买数量不合法！\n"));
 					if (d <= pTicketTemp->amount[i])
 					{
-						sum -= (pTicketTemp->amount[i] - d) * pTicketTemp->credit[i] / pTicketTemp->amount[i];
+						if (pTicketTemp->amount[i] != 0)
+							sum -= (pTicketTemp->amount[i] - d) * pTicketTemp->credit[i] / pTicketTemp->amount[i];
 						warehouse[i].left += pTicketTemp->amount[i] - d;
 						warehouse[i].sold -= pTicketTemp->amount[i] - d;
 					}
@@ -365,7 +366,8 @@ bool ModifyTicket(short tid)
 					d = cent(c);
 					if (d <= pTicketTemp->amount[i])
 					{
-						sum -= cent(dollar(pTicketTemp->amount[i] - d) * 1.0 * pTicketTemp->credit[i] / pTicketTemp->amount[i]);
+						if (pTicketTemp->amount[i] != 0)
+							sum -= cent(dollar(pTicketTemp->amount[i] - d/100) * 1.0 * pTicketTemp->credit[i] / pTicketTemp->amount[i]);
 						warehouse[i].left += pTicketTemp->amount[i] - d;
 						warehouse[i].sold -= pTicketTemp->amount[i] - d;
 					}
@@ -379,7 +381,7 @@ bool ModifyTicket(short tid)
 				pTicketTemp->amount[i] = d;
 				pTicketTemp->credit[i] += sum;
 			}
-			if (pTicketTemp->vipCard == -1)
+			if (pTicketTemp->vipCard != -1)
 			{
 				pUserTemp = GetCardById(pTicketTemp->vipCard);
 				if (pUserTemp == NULL || !ChargeToCard(sum, 0, true))
@@ -387,26 +389,48 @@ bool ModifyTicket(short tid)
 					printf("无法返回到卡内，请退现金%.2lf元。", dollar(sum));
 					pUserTemp = NULL;
 				}
+				else
+				{
+					{
+						if (ScanBoolean("余额不足，是否立刻充值？(y/n)："))
+						{
+							ChargeInConsole(pTicketTemp->vipCard);
+						}
+						else
+						{
+							if (ScanBoolean("是否更换其他卡或使用现金购买？(y/n)："))
+							{
+								return true;
+							}
+							else
+							{
+								printf("放弃充值，购买失败，退出中. . . \n");
+							}
+						}
+					}
+					pTicketTemp->given = pUserTemp->balance;
+				}
 			}
-	}
-		
-	}
-	else
-	{
-		pTicketTemp = FindTicket(tid);
-		if (pTicketTemp == NULL)
-		{
-			printf("单号%04hd不存在！\n", tid);
-			return false;
+
+
 		}
-		if (ScanBoolean("是否修改购物时间？(y/n)："))
+		else
 		{
-			pTicketTemp->time = ScanTime("请输入新下单时间：");
+			pTicketTemp = FindTicket(tid);
+			if (pTicketTemp == NULL)
+			{
+				printf("单号%04hd不存在！\n", tid);
+				return false;
+			}
+			if (ScanBoolean("是否修改购物时间？(y/n)："))
+			{
+				pTicketTemp->time = ScanTime("请输入新下单时间：");
+			}
+			pTicketTemp = NULL;
+			return true;
 		}
-		pTicketTemp = NULL;
-		return true;
 	}
-	return false; 
+		return false;
 }
 
 bool DeleteTicket(short tid)
