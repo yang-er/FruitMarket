@@ -4,12 +4,16 @@
 static int scanf_result = 0;
 time_t pTime = 0;
 struct tm *pCurrentDate = NULL;
+static char chOB[10];
 
 void ScanShort(const char* message, short *i, bool canFF)
 {
 	do {
 		printf(message);
 		scanf_result = scanf("%hd", i);
+		fgets(chOB, 10, stdin);
+		trim(chOB, 10);
+		if (*chOB != 0) scanf_result++;
 		flush();
 	} while (
 		(scanf_result != 1 || ((*i < 1 || *i > 9999) && !(canFF && *i == -1))) // 检测是否输入成功
@@ -22,6 +26,9 @@ void ScanInt(const char* message, int *i)
 	do {
 		printf(message);
 		scanf_result = scanf("%d", i);
+		fgets(chOB, 10, stdin);
+		trim(chOB, 10);
+		if (*chOB != 0) scanf_result++;
 		flush();
 	} while (
 		(scanf_result != 1) // 检测是否输入成功
@@ -34,6 +41,9 @@ void ScanDouble(const char* message, double *i)
 	do {
 		printf(message);
 		scanf_result = scanf("%lf", i);
+		fgets(chOB, 10, stdin);
+		trim(chOB, 10);
+		if (*chOB != 0) scanf_result++;
 		flush();
 	} while (
 		(scanf_result != 1) // 检测是否输入成功
@@ -54,8 +64,6 @@ void ScanText(const char* message, char *buffer, size_t len)
 		&& printf("输出字符串不能为空！\n") // 不成功时输出错误提示
 	);
 }
-
-static char chOB[10];
 
 char ScanOption(const char* message, const char min, const char max)
 {
@@ -181,7 +189,7 @@ void trim(char *buf, size_t len)
 
 	// 从尾部消除无用字符
 	tail = head + strlen(head) - 1;
-	if (isspace(*tail)) *tail-- = '\0';
+	while (tail >= head && isspace(*tail)) *tail-- = '\0';
 
 	// 返回最终的字符串
 	memset(buf, 0x00, len);
