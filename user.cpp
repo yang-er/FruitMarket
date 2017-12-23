@@ -163,7 +163,7 @@ bool CrashCard()
 	short i;
 	ScanShort("请输入会员卡号：", &i, false);
 	if (!ScanBoolean("确定要删除这张小票吗？(y/n)："))
-		return;
+		return false;
 	pUserTemp = pUserFront;
 	while (pUserTemp->next != NULL && pUserTemp->next->uid != i)
 		pUserTemp = pUserTemp->next;
