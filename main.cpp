@@ -46,31 +46,29 @@ void menu_main()
 	char op;
 	while (true)
 	{
-		printf("1.呵，杨良正  2.呵，杜维康  3.呵，徐英杰  4.呵，宗折翼 5.呵，吕游\n");
+		printf("====================\n");
+		printf("|     水果商店     |\n");
+		printf("====================\n");
+		printf("|                  |\n");
+		printf("|    1.库存管理    |\n");
+		printf("|    2.用户管理    |\n");
+		printf("|    3.购物记录    |\n");
+		printf("|    4.第二天      |\n");
+		printf("|    5.退出系统    |\n");
+		printf("|                  |\n");
+		printf("====================\n");
+		printf("当前时间：%4d年%d月%d日。\n", pCurrentDate->tm_year + 1900, pCurrentDate->tm_mon + 1, pCurrentDate->tm_mday);
 		op = ScanOption("请选择进入：", '1', '5');
 		switch (op)
 		{
-		case '1':
-			menu_stock();
-			break;
-		case '2':
-			menu_user();
-			break;
-		case '3':
-			menu_ticket();
-			break;
-		case '5':
-			push_date();
-			break;
-		case '4':
-			if (ScanBoolean("确定退出嘛(y/n)："))
-				op = -52;
-			break;
-		default:
-			break;
+			case '1': menu_stock(); break;
+			case '2': menu_user(); break;
+			case '3': menu_ticket(); break;
+			case '4': push_date(); flush_data(); break;
+			case '5': if (ScanBoolean("确定退出嘛(y/n)：")) return; break;
+			default: break;
 		}
-		if (op == -52)
-			break;
+		clear();
 	}
 }
 
@@ -79,20 +77,16 @@ void push_date()
 	if (!ScanBoolean("直接进入下一天？(y/n)："))
 	{
 		SetCurrentDate();
-		flush_data();
 	}
 	else
 	{
 		ExportTickets();
 		pCurrentDate->tm_mday += 1;
 		pTime = mktime(pCurrentDate);
-		for (int i = 0; i < 5; i++)
-			warehouse[i].todayUsage = 0;
-		for (pUserTemp = pUserFront; pUserTemp != NULL; pUserTemp = pUserTemp->next)
-			pUserTemp->todayUsage = 0;
 	}
 	
 	printf("已进入%d年%d月%d日。\n", pCurrentDate->tm_year + 1900, pCurrentDate->tm_mon + 1, pCurrentDate->tm_mday);
+	sleep(1000);
 }
 
 void flush_data()
