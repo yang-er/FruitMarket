@@ -65,7 +65,7 @@ void menu_main()
 			case '2': menu_user(); break;
 			case '3': menu_ticket(); break;
 			case '4': push_date(); flush_data(); break;
-			case '5': if (ScanBoolean("确定退出嘛(y/n)：")) return; break;
+			case '5': if (ScanBoolean("确定退出吗？(y/n)：")) return; break;
 			default: break;
 		}
 		clear();

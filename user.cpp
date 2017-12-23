@@ -162,6 +162,8 @@ bool CrashCard()
 {
 	short i;
 	ScanShort("请输入会员卡号：", &i, false);
+	if (!ScanBoolean("确定要删除这张小票吗？(y/n)："))
+		return;
 	pUserTemp = pUserFront;
 	while (pUserTemp->next != NULL && pUserTemp->next->uid != i)
 		pUserTemp = pUserTemp->next;
@@ -301,7 +303,7 @@ void menu_user()
 			case '4': if(CrashCard()) printf("删除卡成功。\n"); break;
 			case '5': PrintVip(); _pause(); break;
 			case '6': ListAllVips(); _pause(); break;
-			case '7': if (ScanBoolean("确定退出嘛(y/n)：")) op = -52; break;
+			case '7': if (ScanBoolean("确定退出吗？(y/n)：")) op = -52; break;
 			default: break;
 		}
 		if (op == -52)

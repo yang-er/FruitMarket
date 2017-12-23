@@ -561,10 +561,10 @@ void menu_ticket()
 			break;
 		case '3': OutputAllTickets(); _pause(); break;
 		case '4': ScanShort("请输入单号:", &p, false); ModifyTicket(p); break;
-		case '5': ScanShort("请输入单号：", &p, false); DeleteTicket(p); break;
+		case '5': ScanShort("请输入单号：", &p, false); if (ScanBoolean("确定要删除这张小票吗？(y/n)：")) DeleteTicket(p); break;
 		case '6': ExportTickets(); break;
 		case '7': flush_data(); break;
-		case '8': if (ScanBoolean("确定退出嘛(y/n)：")) op = -52; break;
+		case '8': if (ScanBoolean("确定退出吗？(y/n)：")) op = -52; break;
 		default: break;
 		}
 		
