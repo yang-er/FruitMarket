@@ -17,11 +17,11 @@ bool LoadStockFromFile()
 			printf("程序初始化失败，正在退出. . . \n");
 			exit(4);
 		}
-		fprintf(pFile, "苹果 公斤 F 20 0 5 0 0\n");
-		fprintf(pFile, "香蕉 根 T 20 0 5 0 0\n");
-		fprintf(pFile, "柚子 个 T 20 0 5 0 0\n");
-		fprintf(pFile, "蓝莓 串 T 20 0 5 0 0\n");
-		fprintf(pFile, "梨子 公斤 F 20 0 5 0 0\n");
+		fprintf(pFile, "苹果 公斤 F 0 0 340 0 0\n");
+		fprintf(pFile, "香蕉 根 T 0 0 110 0 4\n");
+		fprintf(pFile, "柚子 个 T 0 0 1100 0 4\n");
+		fprintf(pFile, "草莓 公斤 F 0 0 1277 0 0\n");
+		fprintf(pFile, "梨子 公斤 F 0 0 364 0 0\n");
 		fclose(pFile);
 	}
 

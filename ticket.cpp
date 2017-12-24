@@ -97,14 +97,23 @@ bool SaveTicketToFile()
 
 static bool payOne(int sum)
 {
-	// 会员卡 or 现金
-	bool bContinue;
-	do {
-		ScanShort("请输入会员卡号（现金为-1）：", &pTicketTemp->vipCard, true);
-		pUserTemp = GetCardById(pTicketTemp->vipCard);
-	} while (pUserTemp == NULL && printf("没有找到该会员。\n"));
+	if (sum >= 0 && sum <= 100000)
+	{
+		// 会员卡 or 现金
+		do {
+			ScanShort("请输入会员卡号（现金为-1）：", &pTicketTemp->vipCard, true);
+			pUserTemp = GetCardById(pTicketTemp->vipCard);
+		} while (pUserTemp == NULL && printf("没有找到该会员。\n"));
+	}
+	else
+	{
+		printf("由于该金额过于庞大，因此必须使用现金交易。\n");
+		pTicketTemp->vipCard = -1;
+		pUserTemp = GetCardById(-1);
+	}
 
 	// 收现金
+	bool bContinue;
 	if (pTicketTemp->vipCard == -1)
 	{
 		double c;
@@ -115,6 +124,7 @@ static bool payOne(int sum)
 			if (bContinue) printf("不能倒贴钱。\n");
 			if (bContinue && !ScanBoolean("是否更换收入现金数量？(y/n)："))
 			{
+				printf("钱带的不够，购买失败，退出中. . . \n");
 				_free(pTicketTemp, ticket);
 				pTicketTemp = NULL;
 				return false;
