@@ -57,7 +57,7 @@ bool SaveUserToFile()
 {
 	FILE *pFile;
 	do {
-		pFile = fopen(pfUser, "w+");
+		pFile = fopen(pfUser, "wb+");
 	} while (pFile == NULL && ScanBoolean("文件user.dat无法打开，是否重试？(y/n)："));
 
 	if (pFile == NULL)

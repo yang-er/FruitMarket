@@ -50,7 +50,6 @@ bool LoadStockFromFile()
 bool SaveStockToFile()
 {
 	FILE *pFile;
-	pFile = fopen(pfStock, "w");
 	do {
 		pFile = fopen(pfStock, "w+");
 	} while (pFile == NULL && ScanBoolean("文件stock.dat无法打开，是否重试？(y/n)："));

@@ -63,7 +63,7 @@ bool SaveTicketToFile()
 {
 	FILE *pFile;
 	do {
-		pFile = fopen(pfTicket, "w+");
+		pFile = fopen(pfTicket, "wb+");
 	} while (pFile == NULL && ScanBoolean("文件ticket.dat无法打开，是否重试？(y/n)："));
 
 	if (pFile == NULL)
