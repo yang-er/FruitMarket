@@ -49,6 +49,7 @@ bool LoadStockFromFile()
 
 bool SaveStockToFile()
 {
+	flush_data();
 	FILE *pFile;
 	pFile = fopen(pfStock, "w");
 	do {
@@ -76,6 +77,7 @@ bool SaveStockToFile()
 
 void OutputStock()
 {
+	flush_data();
 	printf("==================\n");
 	printf("|    ø‚¥Êπ‹¿Ì\n");
 	printf("==================\n");

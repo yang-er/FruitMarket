@@ -223,6 +223,7 @@ bool AddTicket()
 		addOne();
 	} while (ScanBoolean("是否继续新建订单？(y/n)："));
 	
+	bFresh = false;
 	return false;
 }
 
@@ -344,6 +345,7 @@ bool ModifyTicket(short tid)
 	printf("如果您要修改购物数量，退款按购买时单价退，收款按现在市场价格收取。\n");
 	if (ScanBoolean("是否修改购物数量？(y/n)："))
 	{
+		bFresh = false;
 		double c = 0;
 		int d = 0, sum = 0, credit = 0;
 		char msg[80];
@@ -465,6 +467,7 @@ bool DeleteTicket(short tid)
 		}
 	}
 
+	bFresh = false;
 	_free(temp, ticket);
 	pTicketTemp = NULL;
 	return true;
@@ -472,6 +475,8 @@ bool DeleteTicket(short tid)
 
 void ExportTickets()
 {
+	flush_data();
+
 	// 生成文件名
 	char pFileName[30];
 	sprintf(pFileName, "%04d-%d-%d 导出消费记录.csv",
@@ -549,11 +554,10 @@ void menu_ticket()
 		printf("|   4.修改记录\n");
 		printf("|   5.删除记录\n");
 		printf("|   6.导出信息\n");
-		printf("|   7.刷新数据\n");
-		printf("|   8.退出\n");
+		printf("|   7.退出\n");
 		printf("|\n");
 		printf("==================\n");
-		op = ScanOption("请选择进入：", '1', '8');
+		op = ScanOption("请选择进入：", '1', '7');
 		printf("\n");
 		switch (op)
 		{
@@ -576,8 +580,7 @@ void menu_ticket()
 		case '4': ScanShort("请输入单号：", &p, false); ModifyTicket(p); break;
 		case '5': ScanShort("请输入单号：", &p, false); if (ScanBoolean("确定要删除这张小票吗？(y/n)：")) DeleteTicket(p); break;
 		case '6': ExportTickets(); break;
-		case '7': flush_data(); break;
-		case '8': if (ScanBoolean("确定退出吗？(y/n)：")) op = -52; break;
+		case '7': if (ScanBoolean("确定退出吗？(y/n)：")) op = -52; break;
 		default: break;
 		}
 		

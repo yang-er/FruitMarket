@@ -210,6 +210,7 @@ bool ListVip(user* current)
 
 void ListAllVips()
 {
+	flush_data();
 	printf("==================\n");
 	printf("|    会员信息\n");
 	printf("==================\n");
@@ -238,6 +239,7 @@ bool ChangeVip(short uid) {
 
 void PrintVip()
 {
+	flush_data();
 	short uid;
 	ScanShort("请输入会员卡号：", &uid, true);
 	pUserTemp = GetCardById(uid);

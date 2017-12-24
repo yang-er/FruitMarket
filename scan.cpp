@@ -1,9 +1,11 @@
 #include "stdafx.h"
 #include "scan.h"
+#include <sys/stat.h>
 
 static int scanf_result = 0;
 time_t pTime = 0;
 struct tm pDate;
+bool bFresh = false;
 static char chOB[10];
 static struct stat pStat;
 

@@ -1,16 +1,12 @@
 #pragma once
 #include <time.h>
 #include <math.h>
-#include <sys/stat.h>
 
 #ifdef __cplusplus
 	#define __extern extern "C"
 #else
 	#define __extern extern
 #endif
-
-// 文件p是否存在
-#define file_exists(p) (_access(p, 0) != EOF)
 
 // 申请内存并清零
 #define _alloc(p,T) do { \
@@ -51,7 +47,6 @@
 	#include <stdio_ext.h>
 	// 清空stdin的多余内容
 	#define flush() __fpurge(stdin)
-	#define _access access
 	// 清屏幕
 	#define clear() system("clear")
 	// 暂停a毫秒
@@ -65,6 +60,7 @@
 
 extern time_t pTime;
 extern struct tm pDate;
+extern bool bFresh;
 
 /// <summary>读取一个0001-9999的数字</summary>
 /// <param name="message" type="String">显示的消息</param>
@@ -123,4 +119,5 @@ void trim(char *buf, size_t len);
 void menu_main();
 
 /// <summary>刷新数据</summary>
+/// <param name="bClear" type="Boolean">清除或更新数据</param>
 void flush_data();

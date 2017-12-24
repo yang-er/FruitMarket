@@ -33,10 +33,10 @@ int main()
 	sleep(500);
 	clear();
 	menu_main();
-	SaveUserToFile();
 	SaveTicketToFile();
+	SaveUserToFile();
 	SaveStockToFile();
-	printf("保存数据完毕，正在退出. . . ");
+	printf("保存数据完毕，正在退出. . . \n");
 	sleep(500);
     return 0;
 }
@@ -64,7 +64,7 @@ void menu_main()
 			case '1': menu_stock(); break;
 			case '2': menu_user(); break;
 			case '3': menu_ticket(); break;
-			case '4': push_date(); flush_data(); break;
+			case '4': push_date(); break;
 			case '5': if (ScanBoolean("确定退出吗？(y/n)：")) return; break;
 			default: break;
 		}
@@ -86,15 +86,19 @@ void push_date()
 	}
 	
 	printf("已进入%d年%d月%d日。\n", pDate.tm_year + 1900, pDate.tm_mon + 1, pDate.tm_mday);
+	bFresh = false;
+	flush_data();
 	sleep(1000);
 }
 
 void flush_data()
 {
+	if (bFresh) return;
 	for (pUserTemp = pUserFront; pUserTemp != NULL; pUserTemp = pUserTemp->next)
 		pUserTemp->todayUsage = 0;
 	for (int i = 0; i < 5; i++)
 		warehouse[i].todayUsage = 0;
+
 	int sum;
 	for (pTicketTemp = pTicketFront->next; pTicketTemp != NULL; pTicketTemp = pTicketTemp->next)
 	{
@@ -112,4 +116,6 @@ void flush_data()
 			pUserTemp = NULL;
 		}
 	}
+
+	bFresh = true;
 }
