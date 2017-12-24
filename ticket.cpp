@@ -21,8 +21,6 @@ ticket *FindTicket(short tid)
 
 void LoadTicketFromFile()
 {
-	struct stat pStat;
-
 	// 清空内存中的信息
 	while (pTicketFront != NULL)
 	{
@@ -34,8 +32,12 @@ void LoadTicketFromFile()
 	pTicketRear = NULL;
 	pTicketTemp = NULL;
 
-	// 文件不存在的时候初始化为空数组
-	if (stat(pfTicket, &pStat) == -1)
+	// 打开文件
+	FILE *pFile = NULL;
+	int count = OpenFile(&pFile, pfTicket, sizeof(ticket));
+
+	// 无数据的时候初始化为空数组
+	if (count == 0)
 	{
 		_alloc(pTicketTemp, ticket);
 		pTicketFront = pTicketTemp;
@@ -44,14 +46,8 @@ void LoadTicketFromFile()
 		return;
 	}
 
-	// 检测文件完整度
-	if (pStat.st_size % sizeof(ticket) != 0)
-		DataNotFulfilled(NULL, pfTicket);
-
-	// 打开文件
-	FILE *pFile = fopen(pfTicket, "r");
-	CheckFile(pFile, pfTicket);
-	for (int i = 0; i < pStat.st_size / sizeof(ticket); i++)
+	// 有数据则读取
+	for (int i = 0; i < count; i++)
 	{
 		_alloc(pTicketTemp, ticket);
 		fread(pTicketTemp, sizeof(ticket), 1, pFile);
@@ -61,13 +57,30 @@ void LoadTicketFromFile()
 		pTicketTemp = NULL;
 	}
 	fclose(pFile);
-	return;
 }
 
 bool SaveTicketToFile()
 {
-	FILE *pFile = fopen(pfTicket, "w+");
-	CheckFile(pFile, pfTicket);
+	FILE *pFile;
+	do {
+		pFile = fopen(pfTicket, "w+");
+	} while (pFile == NULL && ScanBoolean("文件ticket.dat无法打开，是否重试？(y/n)："));
+
+	if (pFile == NULL)
+	{
+		printf("放弃文件保存，所做更改将不被保存. . . \n");
+		while (pTicketFront != NULL)
+		{
+			pTicketTemp = pTicketFront;
+			pTicketFront = pTicketFront->next;
+			pTicketTemp->next = NULL;
+			_free(pTicketTemp, ticket);
+		}
+		pTicketRear = NULL;
+		pTicketTemp = NULL;
+		return false;
+	}
+
 	while (pTicketFront != NULL)
 	{
 		pTicketTemp = pTicketFront;
@@ -81,14 +94,6 @@ bool SaveTicketToFile()
 	fclose(pFile);
 	return true;
 }
-
-// 释放并结束
-#define doClean(p) do { \
-			_free(pTicketTemp, ticket); \
-			pTicketTemp = NULL; \
-			return p; \
-		} while (false)
-#pragma warning (disable: 4003)
 
 static bool payOne(int sum)
 {
@@ -108,7 +113,12 @@ static bool payOne(int sum)
 			pTicketTemp->given = cent(c);
 			bContinue = pTicketTemp->given < sum;
 			if (bContinue) printf("不能倒贴钱。\n");
-			if (bContinue && !ScanBoolean("是否更换收入现金数量？(y/n)：")) doClean(false);
+			if (bContinue && !ScanBoolean("是否更换收入现金数量？(y/n)："))
+			{
+				_free(pTicketTemp, ticket);
+				pTicketTemp = NULL;
+				return false;
+			}
 		} while (bContinue);
 	}
 	// 收会员卡
@@ -129,7 +139,9 @@ static bool payOne(int sum)
 				else
 				{
 					printf("放弃充值，购买失败，退出中. . . \n");
-					doClean(false);
+					_free(pTicketTemp, ticket);
+					pTicketTemp = NULL;
+					return false;
 				}
 				break;
 			}
@@ -204,8 +216,6 @@ static void addOne()
 	OutputTicket(pTicketTemp, true);
 	pTicketTemp = NULL;
 }
-
-#undef doClean
 
 bool AddTicket()
 {
@@ -561,10 +571,10 @@ void menu_ticket()
 			break;
 		case '3': OutputAllTickets(); _pause(); break;
 		case '4': ScanShort("请输入单号:", &p, false); ModifyTicket(p); break;
-		case '5': ScanShort("请输入单号：", &p, false); DeleteTicket(p); break;
+		case '5': ScanShort("请输入单号：", &p, false); if (ScanBoolean("确定要删除这张小票吗？(y/n)：")) DeleteTicket(p); break;
 		case '6': ExportTickets(); break;
 		case '7': flush_data(); break;
-		case '8': if (ScanBoolean("确定退出嘛(y/n)：")) op = -52; break;
+		case '8': if (ScanBoolean("确定退出吗？(y/n)：")) op = -52; break;
 		default: break;
 		}
 		
