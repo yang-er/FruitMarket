@@ -442,6 +442,7 @@ bool DeleteTicket(short tid)
 
 	ticket *temp = pTicketTemp->next;
 	pTicketTemp->next = temp->next;
+	if (pTicketTemp->next == NULL) pTicketRear = pTicketTemp;
 
 	int credit = 0;
 
@@ -572,7 +573,7 @@ void menu_ticket()
 			_pause();
 			break;
 		case '3': OutputAllTickets(); _pause(); break;
-		case '4': ScanShort("请输入单号:", &p, false); ModifyTicket(p); break;
+		case '4': ScanShort("请输入单号：", &p, false); ModifyTicket(p); break;
 		case '5': ScanShort("请输入单号：", &p, false); if (ScanBoolean("确定要删除这张小票吗？(y/n)：")) DeleteTicket(p); break;
 		case '6': ExportTickets(); break;
 		case '7': flush_data(); break;
