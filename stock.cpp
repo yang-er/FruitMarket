@@ -9,9 +9,7 @@ stock warehouse[5];
 bool LoadStockFromFile()
 {
 	FILE *pFile;
-
-	// 文件不存在则初始化默认值
-	if (!file_exists(pfStock))
+	if(OpenFile(&pFile, pfStock, 1) == 0)
 	{
 		pFile = fopen(pfStock, "w");
 		if (pFile == NULL)
@@ -28,7 +26,6 @@ bool LoadStockFromFile()
 	}
 
 	// 读取文件内容
-	OpenFile(&pFile, pfStock, 1);
 	stock *pStock;
 	char isSingle;
 	int pFlag;
