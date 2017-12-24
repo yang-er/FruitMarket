@@ -5,6 +5,7 @@ static int scanf_result = 0;
 time_t pTime = 0;
 struct tm *pCurrentDate = NULL;
 static char chOB[10];
+static struct stat pStat;
 
 void ScanShort(const char* message, short *i, bool canFF)
 {
@@ -98,19 +99,34 @@ bool ScanBoolean(const char* message)
 	return isTrue(chOB[0]);
 }
 
-void CheckFile(FILE* pFile, const char* pszName)
+int OpenFile(FILE* *pFile, const char* pszName, size_t dwStruct)
 {
-	if (pFile == NULL)
+	if (stat(pszName, &pStat) == -1)
 	{
-		fprintf(stderr, "文件%s打开失败！退出中. . . ", pszName);
+		fprintf(stderr, "文件%s不存在，默认数据将设置为空. . . \n", pszName);
+		return 0;
+	}
+
+	if (pStat.st_size % dwStruct != 0)
+	{
+		fprintf(stderr, "%s文件数据被破坏！无法校验通过，退出中. . . \n", pszName);
 		exit(4);
 	}
-}
 
-void DataNotFulfilled(FILE* pFile, const char* pszName)
-{
-	fprintf(stderr, "%s文件数据被破坏！无法校验通过。", pszName);
-	exit(4);
+	*pFile = fopen(pszName, "r");
+	if (*pFile == NULL)
+	{
+		fprintf(stderr, "文件%s打开失败！退出中. . . \n", pszName);
+		exit(4);
+	}
+
+	if (pStat.st_size == 0)
+	{
+		fclose(*pFile);
+		*pFile = NULL;
+	}
+
+	return (int)(pStat.st_size / dwStruct);
 }
 
 time_t ScanTime(const char* message)

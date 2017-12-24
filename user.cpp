@@ -11,8 +11,6 @@ const char *pfUser = "user.dat";
 
 void LoadUserFromFile()
 {
-	struct stat pStat;
-
 	// 清空内存中的用户
 	while (pUserFront != NULL)
 	{
@@ -24,8 +22,11 @@ void LoadUserFromFile()
 	pUserRear = NULL;
 	pUserTemp = NULL;
 
-	// 文件不存在的时候初始化为空数组
-	if (stat(pfUser, &pStat) == -1)
+	FILE* pFile = NULL;
+	int count = OpenFile(&pFile, pfUser, sizeof(user));
+
+	// 无数据的时候初始化为空数组
+	if (count == 0)
 	{
 		_alloc(pUserTemp, user);
 		strcpy(pUserTemp->name, "现金");
@@ -36,14 +37,8 @@ void LoadUserFromFile()
 		return;
 	}
 
-	// 检测文件完整度
-	if (pStat.st_size % sizeof(user) != 0)
-		DataNotFulfilled(NULL, pfUser);
-
-	// 打开文件
-	FILE *pFile = fopen(pfUser, "r");
-	CheckFile(pFile, pfUser);
-	for (int i = 0; i < pStat.st_size / sizeof(user); i++)
+	// 有数据则读取
+	for (int i = 0; i < count; i++)
 	{
 		_alloc(pUserTemp, user);
 		fread(pUserTemp, sizeof(user), 1, pFile);
@@ -56,13 +51,30 @@ void LoadUserFromFile()
 
 	pUserFront->balance = 0;
 	pUserFront->todayUsage = 0;
-
 }
 
 bool SaveUserToFile()
 {
-	FILE *pFile = fopen(pfUser, "w+");
-	CheckFile(pFile, pfUser);
+	FILE *pFile;
+	do {
+		pFile = fopen(pfUser, "w+");
+	} while (pFile == NULL && ScanBoolean("文件user.dat无法打开，是否重试？(y/n)："));
+
+	if (pFile == NULL)
+	{
+		printf("放弃文件保存，所做更改将不被保存. . . \n");
+		while (pUserFront != NULL)
+		{
+			pUserTemp = pUserFront;
+			pUserFront = pUserFront->next;
+			pUserTemp->next = NULL;
+			_free(pUserTemp, ticket);
+		}
+		pUserRear = NULL;
+		pUserTemp = NULL;
+		return false;
+	}
+
 	while (pUserFront != NULL)
 	{
 		pUserTemp = pUserFront;

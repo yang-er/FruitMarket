@@ -14,7 +14,11 @@ bool LoadStockFromFile()
 	if (!file_exists(pfStock))
 	{
 		pFile = fopen(pfStock, "w");
-		CheckFile(pFile, pfStock);
+		if (pFile == NULL)
+		{
+			printf("程序初始化失败，正在退出. . . \n");
+			exit(4);
+		}
 		fprintf(pFile, "苹果 公斤 F 20 0 5 0 0\n");
 		fprintf(pFile, "香蕉 根 T 20 0 5 0 0\n");
 		fprintf(pFile, "柚子 个 T 20 0 5 0 0\n");
@@ -24,8 +28,7 @@ bool LoadStockFromFile()
 	}
 
 	// 读取文件内容
-	pFile = fopen(pfStock, "r");
-	CheckFile(pFile, pfStock);
+	OpenFile(&pFile, pfStock, 1);
 	stock *pStock;
 	char isSingle;
 	int pFlag;
@@ -37,7 +40,10 @@ bool LoadStockFromFile()
 			&pStock->left, &pStock->sold, &pStock->singlePrice,
 			&pStock->todayUsage, &pStock->boxCount);
 		if (pFlag != 8)
-			DataNotFulfilled(pFile, pfStock);
+		{
+			fprintf(stderr, "%s文件数据被破坏！无法校验通过。", pfStock);
+			exit(4);
+		}
 		pStock->isSingled = (isSingle == 'T');
 	}
 	fclose(pFile);
@@ -48,7 +54,16 @@ bool SaveStockToFile()
 {
 	FILE *pFile;
 	pFile = fopen(pfStock, "w");
-	CheckFile(pFile, pfStock);
+	do {
+		pFile = fopen(pfStock, "w+");
+	} while (pFile == NULL && ScanBoolean("文件stock.dat无法打开，是否重试？(y/n)："));
+
+	if (pFile == NULL)
+	{
+		printf("放弃文件保存，所做更改将不被保存. . . \n");
+		return false;
+	}
+
 	stock *pStock;
 	for (int i = 0; i < 5; i++)
 	{
