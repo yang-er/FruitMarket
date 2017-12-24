@@ -110,6 +110,7 @@ int OpenFile(FILE* *pFile, const char* pszName, size_t dwStruct)
 	if (pStat.st_size % dwStruct != 0)
 	{
 		fprintf(stderr, "%s文件数据被破坏！无法校验通过，退出中. . . \n", pszName);
+		sleep(5000);
 		exit(4);
 	}
 
@@ -117,6 +118,7 @@ int OpenFile(FILE* *pFile, const char* pszName, size_t dwStruct)
 	if (*pFile == NULL)
 	{
 		fprintf(stderr, "文件%s打开失败！退出中. . . \n", pszName);
+		sleep(5000);
 		exit(4);
 	}
 
