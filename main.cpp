@@ -13,23 +13,23 @@ int main()
 	if (pTicketFront == pTicketRear)
 	{
 		SetCurrentDate();
-		flush_data();
 	}
 	else
 	{
 		// 设置pTime和pCurrentDate
-		pCurrentDate = localtime(&pTicketRear->time);
-		pCurrentDate->tm_min = 0;
-		pCurrentDate->tm_hour = 0;
-		pCurrentDate->tm_sec = 0;
-		pTime = mktime(pCurrentDate);
+		LocalTime(&pDate, &pTicketRear->time);
+		pDate.tm_min = 0;
+		pDate.tm_hour = 0;
+		pDate.tm_sec = 0;
+		pTime = mktime(&pDate);
 
 		// 输出时间
 		printf("程序日期：%d年%d月%d日。\n",
-			1900 + pCurrentDate->tm_year,
-			pCurrentDate->tm_mon + 1,
-			pCurrentDate->tm_mday);
+			1900 + pDate.tm_year,
+			pDate.tm_mon + 1,
+			pDate.tm_mday);
 	}
+	flush_data();
 	sleep(500);
 	clear();
 	menu_main();
@@ -57,7 +57,7 @@ void menu_main()
 		printf("|    5.退出系统    |\n");
 		printf("|                  |\n");
 		printf("====================\n");
-		printf("当前时间：%4d年%d月%d日。\n", pCurrentDate->tm_year + 1900, pCurrentDate->tm_mon + 1, pCurrentDate->tm_mday);
+		printf("当前时间：%4d年%d月%d日。\n", pDate.tm_year + 1900, pDate.tm_mon + 1, pDate.tm_mday);
 		op = ScanOption("请选择进入：", '1', '5');
 		switch (op)
 		{
@@ -81,11 +81,11 @@ void push_date()
 	else
 	{
 		ExportTickets();
-		pCurrentDate->tm_mday += 1;
-		pTime = mktime(pCurrentDate);
+		pDate.tm_mday += 1;
+		pTime = mktime(&pDate);
 	}
 	
-	printf("已进入%d年%d月%d日。\n", pCurrentDate->tm_year + 1900, pCurrentDate->tm_mon + 1, pCurrentDate->tm_mday);
+	printf("已进入%d年%d月%d日。\n", pDate.tm_year + 1900, pDate.tm_mon + 1, pDate.tm_mday);
 	sleep(1000);
 }
 

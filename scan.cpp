@@ -3,7 +3,7 @@
 
 static int scanf_result = 0;
 time_t pTime = 0;
-struct tm *pCurrentDate = NULL;
+struct tm pDate;
 static char chOB[10];
 static struct stat pStat;
 
@@ -149,30 +149,30 @@ void SetCurrentDate()
 {
 	// 获取系统时间
 	time(&pTime);
-	pCurrentDate = localtime(&pTime);
+	LocalTime(&pDate, &pTime);
 	printf("系统日期：%d年%d月%d日。\n",
-		1900 + pCurrentDate->tm_year,
-		pCurrentDate->tm_mon + 1,
-		pCurrentDate->tm_mday);
-	pCurrentDate->tm_hour = 0;
-	pCurrentDate->tm_min = 0;
-	pCurrentDate->tm_sec = 0;
+		1900 + pDate.tm_year,
+		pDate.tm_mon + 1,
+		pDate.tm_mday);
+	pDate.tm_hour = 0;
+	pDate.tm_min = 0;
+	pDate.tm_sec = 0;
 
 	// 是否使用当前时间
 	if (!ScanBoolean("是否使用当前日期？(y/n)："))
 	{
 		do {
 			printf("请输入当前日期(YYYY-MM-DD)：");
-			scanf_result = scanf("%d-%d-%d", &pCurrentDate->tm_year, &pCurrentDate->tm_mon, &pCurrentDate->tm_mday);
+			scanf_result = scanf("%d-%d-%d", &pDate.tm_year, &pDate.tm_mon, &pDate.tm_mday);
 			flush();
 
 			// 检测是否输入成功
 			if (scanf_result != 3) continue;
 			
-			pCurrentDate->tm_year -= 1900;
-			pCurrentDate->tm_mon -= 1;
+			pDate.tm_year -= 1900;
+			pDate.tm_mon -= 1;
 			
-			pTime = mktime(pCurrentDate);
+			pTime = mktime(&pDate);
 		} while (
 			((scanf_result != 3) && printf("输入格式有误！格式：YYYY-MM-DD，如2017-12-21。\n")) // 输入不完整不能被识别
 			|| ((pTime == -1) && printf("输入内容无法被识别！\n")) // 内容不能被识别
@@ -181,7 +181,7 @@ void SetCurrentDate()
 	}
 	else
 	{
-		pTime = mktime(pCurrentDate);
+		pTime = mktime(&pDate);
 	}
 }
 

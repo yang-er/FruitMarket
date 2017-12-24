@@ -246,9 +246,11 @@ void OutputTicket(ticket* ticket, bool isFull)
 	}
 	printf("|  付款方式：%s    票据号：%04d          |\n", ticket->vipCard == -1 ? "现金  " : "会员卡", ticket->tid);
 	printf("|                                            |\n");
-	int calc = (int)(ticket->time - pTime);
+
+	struct tm pDate;
+	LocalTime(&pDate, &ticket->time);
 	printf("|  订购时间：%04d年%2d月%2d日 %2d:%02d            |\n", 
-		pCurrentDate->tm_year + 1900, pCurrentDate->tm_mon + 1, pCurrentDate->tm_mday, calc / 3600, calc / 60 % 60);
+		pDate.tm_year + 1900, pDate.tm_mon + 1, pDate.tm_mday, pDate.tm_hour, pDate.tm_min);
 	printf("|--------------------------------------------|\n");
 	printf("|  # 商品名           单价    数量     金额  |\n");
 	int sum = 0;
@@ -472,7 +474,7 @@ void ExportTickets()
 	// 生成文件名
 	char pFileName[30];
 	sprintf(pFileName, "%04d-%d-%d 导出消费记录.csv",
-		pCurrentDate->tm_year + 1900, pCurrentDate->tm_mon + 1, pCurrentDate->tm_mday);
+		pDate.tm_year + 1900, pDate.tm_mon + 1, pDate.tm_mday);
 
 	// 打开文件
 	FILE *pFile;

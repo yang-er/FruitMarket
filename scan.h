@@ -44,6 +44,8 @@
 	__extern void __stdcall Sleep(unsigned long dwMilliseconds);
 	// 暂停a毫秒
 	#define sleep(a) Sleep(a)
+	// localtime线程安全
+	#define LocalTime(a,b) localtime_s(a,b)
 #else
 	#include <unistd.h>
 	#include <stdio_ext.h>
@@ -54,13 +56,15 @@
 	#define clear() system("clear")
 	// 暂停a毫秒
 	#define sleep(a) usleep((a)*1000)
+	// localtime线程安全
+	#define LocalTime(a,b) localtime_r(b,a)
 #endif
 
 // 交换数值类型a和b的值
 #define swap(a,b) (a)^=(b)^=(a)^=(b)
 
 extern time_t pTime;
-extern struct tm *pCurrentDate;
+extern struct tm pDate;
 
 /// <summary>读取一个0001-9999的数字</summary>
 /// <param name="message" type="String">显示的消息</param>
