@@ -49,7 +49,6 @@ bool LoadStockFromFile()
 
 bool SaveStockToFile()
 {
-	flush_data();
 	FILE *pFile;
 	pFile = fopen(pfStock, "w");
 	do {
