@@ -68,7 +68,7 @@ bool SaveUserToFile()
 			pUserTemp = pUserFront;
 			pUserFront = pUserFront->next;
 			pUserTemp->next = NULL;
-			_free(pUserTemp, ticket);
+			_free(pUserTemp, user);
 		}
 		pUserRear = NULL;
 		pUserTemp = NULL;
