@@ -72,6 +72,7 @@ bool SaveUserToFile()
 		}
 		pUserRear = NULL;
 		pUserTemp = NULL;
+		sleep(1000);
 		return false;
 	}
 

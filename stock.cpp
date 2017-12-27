@@ -38,7 +38,8 @@ bool LoadStockFromFile()
 			&pStock->todayUsage, &pStock->boxCount);
 		if (pFlag != 8)
 		{
-			fprintf(stderr, "%s文件数据被破坏！无法校验通过。", pfStock);
+			fprintf(stderr, "%s文件数据被破坏！无法校验通过，退出中. . . ", pfStock);
+			sleep(5000);
 			exit(4);
 		}
 		pStock->isSingled = (isSingle == 'T');
@@ -57,6 +58,7 @@ bool SaveStockToFile()
 	if (pFile == NULL)
 	{
 		printf("放弃文件保存，所做更改将不被保存. . . \n");
+		sleep(1000);
 		return false;
 	}
 

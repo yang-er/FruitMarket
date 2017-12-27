@@ -78,6 +78,7 @@ bool SaveTicketToFile()
 		}
 		pTicketRear = NULL;
 		pTicketTemp = NULL;
+		sleep(1000);
 		return false;
 	}
 

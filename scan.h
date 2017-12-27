@@ -11,6 +11,12 @@
 // 申请内存并清零
 #define _alloc(p,T) do { \
 	p = (T*) malloc(sizeof(T)); \
+	if (p == NULL) \
+	{ \
+		printf("内存申请失败，程序将退出. . . "); \
+		sleep(5000); \
+		exit(998); \
+	} \
 	memset(p, 0x00, sizeof(T)); \
 } while (false)
 
