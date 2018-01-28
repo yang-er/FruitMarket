@@ -15,25 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="stdafx.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="user.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="stock.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="scan.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ticket.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="structs.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -41,31 +29,35 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="final_exam.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="user.cpp">
+    <ClCompile Include="homework1.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="stock.cpp">
+    <ClCompile Include="homework2.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ticket.cpp">
+    <ClCompile Include="homework3.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="scan.cpp">
+    <ClCompile Include="homework4.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="stock.dat">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="user.dat">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="ticket.dat">
-      <Filter>资源文件</Filter>
-    </None>
+    <ClCompile Include="homework5.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="homework6.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="homework8.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="homework9.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="homeworkX.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
